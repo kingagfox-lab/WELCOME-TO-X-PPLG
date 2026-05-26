@@ -1,0 +1,1115 @@
+    <!DOCTYPE html>
+    <html lang="id" class="dark scroll-smooth">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>PPLG - Masa Depan Programmer & Game Developer</title>
+        
+        <!-- Google Fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+        
+        <!-- Tailwind CSS -->
+        <script src="https://cdn.tailwindcss.com"></script>
+        
+        <!-- Lucide Icons -->
+        <script src="https://unpkg.com/lucide@latest"></script>
+
+        <!-- Tailwind Configuration -->
+        <script>
+            tailwind.config = {
+                darkMode: 'class',
+                theme: {
+                    extend: {
+                        fontFamily: {
+                            cyber: ['Orbitron', 'sans-serif'],
+                            body: ['Rajdhani', 'sans-serif'],
+                        },
+                        colors: {
+                            cyber: {
+                                black: '#0a0a0c',
+                                metallic: '#12151c',
+                                card: '#1a1e29',
+                                blue: '#00f3ff',
+                                blueHover: '#00c3cc',
+                                green: '#76b900', // NVIDIA Green
+                                greenHover: '#5e9400'
+                            }
+                        },
+                        animation: {
+                            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                            'float': 'float 6s ease-in-out infinite',
+                            'spin-slow': 'spin 10s linear infinite',
+                        },
+                        keyframes: {
+                            float: {
+                                '0%, 100%': { transform: 'translateY(0)' },
+                                '50%': { transform: 'translateY(-20px)' },
+                            }
+                        }
+                    }
+                }
+            }
+        </script>
+
+        <!-- Custom CSS (Glow, Animations, Scrollbar) -->
+        <style>
+            body {
+                background-color: #f0f0f0;
+                background-image: none;
+                color: #1a1a1a;
+                transition: all 0.5s ease;
+                overflow-x: hidden;
+            }
+
+            .dark body {
+                background-color: #0a0a0c;
+                background-image: linear-gradient(135deg, #020c1b 0%, #0a0a0c 50%, #0d1624 100%);
+                background-attachment: fixed;
+                color: #e2e8f0;
+            }
+
+            /* Custom Scrollbar */
+            ::-webkit-scrollbar { width: 10px; }
+            ::-webkit-scrollbar-track { background: theme('colors.cyber.black'); }
+            ::-webkit-scrollbar-thumb { background: theme('colors.cyber.metallic'); border-radius: 5px; border: 1px solid theme('colors.cyber.green'); }
+            ::-webkit-scrollbar-thumb:hover { background: theme('colors.cyber.green'); }
+
+            /* Typography Gradients */
+            .text-gradient {
+                background: linear-gradient(to right, theme('colors.cyber.green'), theme('colors.cyber.blue'));
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+            }
+
+            /* Glow Effects */
+            .glow-text-blue { text-shadow: 0 0 10px theme('colors.cyber.blue'), 0 0 20px theme('colors.cyber.blue'); }
+            .glow-text-green { text-shadow: 0 0 10px theme('colors.cyber.green'), 0 0 20px theme('colors.cyber.green'); }
+            
+            .glow-border-blue {
+                box-shadow: 0 0 15px rgba(0, 243, 255, 0.3), inset 0 0 15px rgba(0, 243, 255, 0.1);
+                border-color: theme('colors.cyber.blue');
+            }
+            .glow-border-green {
+                box-shadow: 0 0 15px rgba(118, 185, 0, 0.3), inset 0 0 15px rgba(118, 185, 0, 0.1);
+                border-color: theme('colors.cyber.green');
+            }
+
+            /* Glassmorphism Cards */
+            .glass-card {
+                background: rgba(255, 255, 255, 0.03);
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.05);
+                transition: all 0.3s ease;
+            }
+            .dark .glass-card {
+                background: rgba(18, 21, 28, 0.6);
+                border: 1px solid rgba(0, 243, 255, 0.1);
+            }
+            .glass-card:hover {
+                transform: translateY(-5px);
+                border-color: theme('colors.cyber.green');
+                box-shadow: 0 10px 30px -10px theme('colors.cyber.green');
+            }
+
+            /* Scroll Reveal Animation */
+            .reveal {
+                opacity: 0;
+                transform: translateY(50px);
+                transition: all 0.8s ease-out;
+            }
+            .reveal.active {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            /* Background Canvas */
+            #bg-canvas {
+                position: fixed;
+                top: 0; left: 0;
+                width: 100%; height: 100%;
+                z-index: -1;
+                opacity: 0.4;
+            }
+
+            /* Loading Screen */
+            #loader {
+                position: fixed;
+                inset: 0;
+                background-color: theme('colors.cyber.black');
+                z-index: 10000;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+                transition: opacity 0.5s ease;
+            }
+            .loader-ring {
+                width: 80px; height: 80px;
+                border: 4px solid transparent;
+                border-top-color: theme('colors.cyber.green');
+                border-bottom-color: theme('colors.cyber.blue');
+                border-radius: 50%;
+                animation: spin 1.5s linear infinite;
+            }
+            
+            /* Typing cursor */
+            .typing-cursor::after {
+                content: '|';
+                animation: blink 1s step-end infinite;
+                color: theme('colors.cyber.blue');
+            }
+            @keyframes blink { 50% { opacity: 0; } }
+
+            /* Timeline */
+            .timeline-container::after {
+                content: ''; position: absolute; width: 4px;
+                background: linear-gradient(to bottom, theme('colors.cyber.green'), theme('colors.cyber.blue'));
+                top: 0; bottom: 0; left: 50%; margin-left: -2px;
+            }
+            @media (max-width: 768px) {
+                .timeline-container::after { left: 31px; }
+            }
+
+            /* Accordion transition */
+            .accordion-content {
+                transition: max-height 0.3s ease-out, padding 0.3s ease;
+                max-height: 0;
+                overflow: hidden;
+            }
+        </style>
+    </head>
+    <body class="font-body antialiased selection:bg-cyber-green selection:text-black">
+
+        <!-- Loading Screen -->
+        <div id="loader">
+            <div class="loader-ring mb-6"></div>
+            <h2 class="font-cyber text-2xl font-bold tracking-widest text-gradient">SYS_INIT_PPLG</h2>
+            <div class="text-left w-72 h-32 mt-4 overflow-hidden relative border border-cyber-green/20 bg-black/50 p-3 rounded-lg shadow-[0_0_15px_rgba(118,185,0,0.1)]">
+                <div id="boot-text-container" class="absolute bottom-3 w-full font-mono text-xs flex flex-col gap-1.5">
+                    <!-- Baris terminal akan dimunculkan melalui JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Background Canvas for Particles -->
+        <canvas id="bg-canvas"></canvas>
+
+        <!-- Navbar -->
+        <nav id="navbar" class="fixed w-full z-50 transition-all duration-300 bg-transparent py-4 border-b border-transparent">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center">
+                    <!-- Logo -->
+                    <a href="#" class="flex items-center gap-2 group cursor-pointer" data-cursor="hover">
+                        <i data-lucide="terminal" class="text-cyber-green group-hover:text-cyber-blue transition-colors"></i>
+                        <span class="font-cyber font-bold text-2xl tracking-wider text-black dark:text-white group-hover:text-gradient transition-all">PPLG<span class="text-cyber-green">_</span></span>
+                    </a>
+
+                    <!-- Desktop Menu -->
+                    <div class="hidden md:flex space-x-8 items-center font-cyber text-sm tracking-wide">
+                        <a href="#about" class="text-gray-600 dark:text-gray-300 hover:text-cyber-green dark:hover:text-cyber-blue transition-colors" data-cursor="hover">01. Tentang</a>
+                        <a href="#materi" class="text-gray-600 dark:text-gray-300 hover:text-cyber-green dark:hover:text-cyber-blue transition-colors" data-cursor="hover">02. Materi</a>
+                        <a href="#prospek" class="text-gray-600 dark:text-gray-300 hover:text-cyber-green dark:hover:text-cyber-blue transition-colors" data-cursor="hover">03. Karier</a>
+                        <a href="#timeline" class="text-gray-600 dark:text-gray-300 hover:text-cyber-green dark:hover:text-cyber-blue transition-colors" data-cursor="hover">04. Roadmap</a>
+                        
+                        <!-- Theme Toggle -->
+                        <button id="theme-toggle" class="p-2 rounded-full border border-gray-300 dark:border-gray-700 hover:border-cyber-green dark:hover:border-cyber-blue transition-all" data-cursor="hover">
+                            <i data-lucide="moon" id="theme-icon" class="w-5 h-5 text-gray-800 dark:text-white"></i>
+                        </button>
+                    </div>
+
+                    <!-- Mobile Menu Button -->
+                    <div class="md:hidden flex items-center gap-4">
+                        <button id="theme-toggle-mobile" class="p-2 text-gray-800 dark:text-white">
+                            <i data-lucide="moon" id="theme-icon-mobile" class="w-5 h-5"></i>
+                        </button>
+                        <button id="mobile-menu-btn" class="text-gray-800 dark:text-white hover:text-cyber-green">
+                            <i data-lucide="menu" class="w-6 h-6"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="hidden md:hidden bg-white/95 dark:bg-cyber-black/95 backdrop-blur-lg border-b border-gray-200 dark:border-gray-800 absolute w-full">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 font-cyber">
+                    <a href="#about" class="block px-3 py-2 rounded-md text-base font-medium text-gray-800 dark:text-gray-200 hover:text-cyber-green">01. Tentang</a>
+                    <a href="#materi" class="block px-3 py-2 rounded-md text-base font-medium text-gray-800 dark:text-gray-200 hover:text-cyber-green">02. Materi</a>
+                    <a href="#prospek" class="block px-3 py-2 rounded-md text-base font-medium text-gray-800 dark:text-gray-200 hover:text-cyber-green">03. Karier</a>
+                    <a href="#timeline" class="block px-3 py-2 rounded-md text-base font-medium text-gray-800 dark:text-gray-200 hover:text-cyber-green">04. Roadmap</a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- ================= HERO SECTION ================= -->
+        <section id="hero" class="relative min-h-screen flex items-center pt-20 overflow-hidden" data-parallax="bg">
+            <!-- Decoration elements -->
+            <div class="absolute top-1/4 left-10 w-72 h-72 bg-cyber-green rounded-full mix-blend-multiply filter blur-[128px] opacity-20 dark:opacity-40 animate-pulse-slow"></div>
+            <div class="absolute bottom-1/4 right-10 w-72 h-72 bg-cyber-blue rounded-full mix-blend-multiply filter blur-[128px] opacity-20 dark:opacity-40 animate-pulse-slow" style="animation-delay: 1.5s;"></div>
+
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full flex flex-col md:flex-row items-center justify-between gap-12">
+                
+                <!-- Hero Text -->
+                <div class="w-full md:w-1/2 space-y-6 text-center md:text-left z-10" data-parallax="element">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-cyber-green/50 bg-cyber-green/10 text-cyber-green font-cyber text-xs tracking-widest mb-4">
+                        <span class="w-2 h-2 rounded-full bg-cyber-green animate-ping"></span>
+                        SISTEM ONLINE & SIAP
+                    </div>
+                    
+                    <h1 class="text-5xl md:text-6xl lg:text-7xl font-cyber font-black leading-tight text-gray-900 dark:text-white uppercase">
+                        Masa Depan <br/>
+                        <span class="text-gradient drop-shadow-lg glow-text-blue">Teknologi</span>
+                    </h1>
+                    
+                    <!-- Typing Effect -->
+                    <div class="h-16 md:h-20">
+                        <p class="text-xl md:text-2xl font-light text-gray-600 dark:text-gray-300 font-cyber typing-cursor">
+                            Kami Mencetak <span id="typing-text" class="font-bold text-cyber-green"></span>
+                        </p>
+                    </div>
+
+                    <p class="text-base md:text-lg text-gray-500 dark:text-gray-400 max-w-lg mx-auto md:mx-0">
+                        Selamat datang di jurusan Pengembangan Perangkat Lunak dan Gim. Pelajari coding, desain UI/UX, hingga pembuatan game modern. Jadilah arsitek dunia digital!
+                    </p>
+
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start pt-4">
+                        <a href="#about" data-cursor="hover" class="relative group inline-flex items-center justify-center px-8 py-3 font-cyber font-bold tracking-widest text-black bg-cyber-green border border-cyber-green hover:bg-cyber-greenHover rounded-none overflow-hidden transition-all glow-border-green">
+                            <span class="absolute w-0 h-0 transition-all duration-500 ease-out bg-white rounded-full group-hover:w-56 group-hover:h-56 opacity-10"></span>
+                            <span class="relative flex items-center gap-2">START_SYSTEM <i data-lucide="chevron-right"></i></span>
+                        </a>
+                        <a href="#materi" data-cursor="hover" class="inline-flex items-center justify-center px-8 py-3 font-cyber font-bold tracking-widest text-gray-900 dark:text-white border-2 border-gray-900 dark:border-gray-700 hover:border-cyber-blue dark:hover:border-cyber-blue hover:text-cyber-blue dark:hover:text-cyber-blue transition-all">
+                            VIEW_MODULES
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Hero Image/Illustration (CSS/HTML Art) -->
+                <div class="w-full md:w-1/2 relative h-[400px] flex justify-center items-center animate-float">
+                    <div class="relative w-80 h-80 z-10 perspective-1000">
+                        <!-- Tech Ring Back -->
+                        <div class="absolute inset-0 border-4 border-dashed border-cyber-blue/30 rounded-full animate-spin-slow"></div>
+                        <!-- Core Setup illustration using Tailwind -->
+                        <div class="absolute inset-4 bg-gradient-to-br from-cyber-card to-cyber-metallic rounded-2xl border border-cyber-green/50 shadow-[0_0_50px_rgba(118,185,0,0.2)] flex flex-col overflow-hidden glass-card">
+                            <!-- Top Bar -->
+                            <div class="h-6 bg-gray-900 border-b border-gray-700 flex items-center px-3 gap-1.5">
+                                <div class="w-2.5 h-2.5 rounded-full bg-red-500"></div>
+                                <div class="w-2.5 h-2.5 rounded-full bg-yellow-500"></div>
+                                <div class="w-2.5 h-2.5 rounded-full bg-green-500"></div>
+                            </div>
+                            <!-- IDE Mockup -->
+                            <div class="flex-1 p-4 font-mono text-xs sm:text-sm text-left text-gray-400">
+                                <p><span class="text-pink-500">import</span> { <span class="text-cyber-blue">Future</span> } <span class="text-pink-500">from</span> <span class="text-cyber-green">'./PPLG'</span>;</p>
+                                <br>
+                                <p><span class="text-purple-500">const</span> <span class="text-yellow-300">student</span> = <span class="text-purple-500">new</span> <span class="text-cyber-blue">Future</span>();</p>
+                                <p><span class="text-yellow-300">student</span>.<span class="text-blue-400">learn</span>([</p>
+                                <p class="pl-4"><span class="text-cyber-green">'Coding'</span>,</p>
+                                <p class="pl-4"><span class="text-cyber-green">'AI'</span>,</p>
+                                <p class="pl-4"><span class="text-cyber-green">'Game Dev'</span></p>
+                                <p>]);</p>
+                                <br>
+                                <p><span class="text-yellow-300">student</span>.<span class="text-blue-400">execute</span>(); <span class="text-gray-500">Wait...</span></p>
+                                <p class="text-cyber-green mt-2 animate-pulse">> SUCCESS: World Changed.</p>
+                            </div>
+                        </div>
+                        <!-- Floating Icons -->
+                        <div class="absolute -top-4 -left-4 w-12 h-12 bg-white dark:bg-cyber-metallic rounded-xl border border-cyber-blue/50 flex items-center justify-center animate-bounce" style="animation-delay: 0.2s">
+                            <i data-lucide="gamepad-2" class="text-cyber-blue"></i>
+                        </div>
+                        <div class="absolute -bottom-4 -right-4 w-12 h-12 bg-white dark:bg-cyber-metallic rounded-xl border border-cyber-green/50 flex items-center justify-center animate-bounce" style="animation-delay: 0.5s">
+                            <i data-lucide="code-2" class="text-cyber-green"></i>
+                        </div>
+                        <div class="absolute top-1/2 -right-6 w-10 h-10 bg-white dark:bg-cyber-metallic rounded-xl border border-purple-500/50 flex items-center justify-center animate-bounce" style="animation-delay: 0.8s">
+                            <i data-lucide="cpu" class="text-purple-500"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= ABOUT SECTION ================= -->
+        <section id="about" class="py-24 relative">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 reveal">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+                    
+                    <div class="relative">
+                        <div class="absolute -inset-1 bg-gradient-to-r from-cyber-green to-cyber-blue rounded-2xl blur opacity-30"></div>
+                        <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Cyber Security & Setup" class="relative rounded-2xl border border-gray-700 w-full object-cover h-[400px]">
+                        
+                        <!-- Overlay Badge -->
+                        <div class="absolute bottom-6 left-6 glass-card p-4 rounded-xl border-l-4 border-l-cyber-blue">
+                            <p class="font-cyber font-bold text-2xl text-white">100%</p>
+                            <p class="text-xs text-gray-300 font-cyber tracking-wider">FOKUS TEKNOLOGI</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-6">
+                        <div class="flex items-center gap-2 mb-2">
+                            <i data-lucide="info" class="text-cyber-green"></i>
+                            <h2 class="font-cyber text-sm font-bold text-cyber-green tracking-widest uppercase">Tentang PPLG</h2>
+                        </div>
+                        <h3 class="text-3xl md:text-4xl font-bold font-cyber text-gray-900 dark:text-white">Apa itu Jurusan PPLG?</h3>
+                        <p class="text-gray-600 dark:text-gray-400 leading-relaxed text-lg">
+                            <strong class="text-cyber-blue">Pengembangan Perangkat Lunak dan Gim (PPLG)</strong> bukan sekadar belajar ngetik kode. Di sini, kamu diajarkan untuk memecahkan masalah, merancang logika, dan menciptakan inovasi.
+                        </p>
+                        <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+                            Mulai dari website, aplikasi mobile, AI, hingga pembuatan Video Game. Di era digital saat ini, keahlian software development adalah "Superpower" yang sangat dibutuhkan oleh setiap perusahaan di seluruh dunia.
+                        </p>
+                        
+                        <ul class="space-y-3 mt-4">
+                            <li class="flex items-center gap-3 text-gray-700 dark:text-gray-300">
+                                <i data-lucide="check-circle" class="text-cyber-green w-5 h-5"></i>
+                                Bikin Aplikasi & Website Sendiri
+                            </li>
+                            <li class="flex items-center gap-3 text-gray-700 dark:text-gray-300">
+                                <i data-lucide="check-circle" class="text-cyber-green w-5 h-5"></i>
+                                Ciptakan Game Impianmu
+                            </li>
+                            <li class="flex items-center gap-3 text-gray-700 dark:text-gray-300">
+                                <i data-lucide="check-circle" class="text-cyber-green w-5 h-5"></i>
+                                Siap Kerja atau Freelance Lulus Sekolah
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= MATERI SECTION ================= -->
+        <section id="materi" class="py-24 bg-gray-100/50 dark:bg-cyber-metallic/30 border-y border-gray-200 dark:border-gray-800">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <div class="reveal">
+                    <h2 class="font-cyber text-sm font-bold text-cyber-blue tracking-widest uppercase mb-2">Modul Pembelajaran</h2>
+                    <h3 class="text-3xl md:text-4xl font-bold font-cyber text-gray-900 dark:text-white mb-12">Senjata Seorang <span class="text-cyber-green">Developer</span></h3>
+                </div>
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 reveal">
+                    <!-- Card 1 -->
+                    <div class="glass-card p-6 rounded-xl flex flex-col items-center justify-center gap-4 group cursor-pointer" data-cursor="hover">
+                        <i data-lucide="file-code-2" class="w-12 h-12 text-orange-500 group-hover:scale-110 transition-transform"></i>
+                        <h4 class="font-bold font-cyber text-gray-900 dark:text-white">HTML & CSS</h4>
+                        <p class="text-xs text-gray-500">Struktur & Desain Web</p>
+                    </div>
+                    <!-- Card 2 -->
+                    <div class="glass-card p-6 rounded-xl flex flex-col items-center justify-center gap-4 group cursor-pointer" data-cursor="hover">
+                        <i data-lucide="file-json-2" class="w-12 h-12 text-yellow-400 group-hover:scale-110 transition-transform"></i>
+                        <h4 class="font-bold font-cyber text-gray-900 dark:text-white">JavaScript</h4>
+                        <p class="text-xs text-gray-500">Logika & Interaktivitas</p>
+                    </div>
+                    <!-- Card 3 -->
+                    <div class="glass-card p-6 rounded-xl flex flex-col items-center justify-center gap-4 group cursor-pointer" data-cursor="hover">
+                        <i data-lucide="database" class="w-12 h-12 text-blue-500 group-hover:scale-110 transition-transform"></i>
+                        <h4 class="font-bold font-cyber text-gray-900 dark:text-white">Database</h4>
+                        <p class="text-xs text-gray-500">MySQL & Pengolahan Data</p>
+                    </div>
+                    <!-- Card 4 -->
+                    <div class="glass-card p-6 rounded-xl flex flex-col items-center justify-center gap-4 group cursor-pointer" data-cursor="hover">
+                        <i data-lucide="server" class="w-12 h-12 text-purple-500 group-hover:scale-110 transition-transform"></i>
+                        <h4 class="font-bold font-cyber text-gray-900 dark:text-white">PHP / Backend</h4>
+                        <p class="text-xs text-gray-500">Server Side Programming</p>
+                    </div>
+                    <!-- Card 5 -->
+                    <div class="glass-card p-6 rounded-xl flex flex-col items-center justify-center gap-4 group cursor-pointer" data-cursor="hover">
+                        <i data-lucide="pen-tool" class="w-12 h-12 text-pink-500 group-hover:scale-110 transition-transform"></i>
+                        <h4 class="font-bold font-cyber text-gray-900 dark:text-white">UI / UX</h4>
+                        <p class="text-xs text-gray-500">Figma & User Experience</p>
+                    </div>
+                    <!-- Card 6 -->
+                    <div class="glass-card p-6 rounded-xl flex flex-col items-center justify-center gap-4 group cursor-pointer" data-cursor="hover">
+                        <i data-lucide="gamepad-2" class="w-12 h-12 text-cyber-green group-hover:scale-110 transition-transform"></i>
+                        <h4 class="font-bold font-cyber text-gray-900 dark:text-white">Game Dev</h4>
+                        <p class="text-xs text-gray-500">Unity & C# / 2D & 3D Game</p>
+                    </div>
+                    <!-- Card 7 -->
+                    <div class="glass-card p-6 rounded-xl flex flex-col items-center justify-center gap-4 group cursor-pointer" data-cursor="hover">
+                        <i data-lucide="terminal" class="w-12 h-12 text-green-400 group-hover:scale-110 transition-transform"></i>
+                        <h4 class="font-bold font-cyber text-gray-900 dark:text-white">Python & AI</h4>
+                        <p class="text-xs text-gray-500">Algoritma & Basic AI</p>
+                    </div>
+                    <!-- Card 8 -->
+                    <div class="glass-card p-6 rounded-xl flex flex-col items-center justify-center gap-4 group cursor-pointer" data-cursor="hover">
+                        <i data-lucide="github" class="w-12 h-12 text-gray-800 dark:text-white group-hover:scale-110 transition-transform"></i>
+                        <h4 class="font-bold font-cyber text-gray-900 dark:text-white">Git & GitHub</h4>
+                        <p class="text-xs text-gray-500">Version Control System</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= PROSPEK KERJA SECTION ================= -->
+        <section id="prospek" class="py-24 relative">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16 reveal">
+                    <h2 class="font-cyber text-sm font-bold text-cyber-green tracking-widest uppercase mb-2">Peluang Karier</h2>
+                    <h3 class="text-3xl md:text-4xl font-bold font-cyber text-gray-900 dark:text-white">Mau Jadi Apa Setelah <span class="text-cyber-blue glow-text-blue">Lulus?</span></h3>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 reveal">
+                    <!-- Job 1 -->
+                    <div class="glass-card p-8 rounded-2xl relative overflow-hidden group">
+                        <div class="absolute top-0 right-0 w-32 h-32 bg-cyber-blue/10 rounded-full blur-3xl group-hover:bg-cyber-blue/30 transition-all"></div>
+                        <i data-lucide="monitor" class="w-10 h-10 text-cyber-blue mb-6"></i>
+                        <h4 class="text-xl font-bold font-cyber text-gray-900 dark:text-white mb-3">Frontend Developer</h4>
+                        <p class="text-gray-600 dark:text-gray-400 text-sm">Spesialis pembuat tampilan website yang interaktif, responsif, dan memanjakan mata pengguna.</p>
+                    </div>
+                    
+                    <!-- Job 2 -->
+                    <div class="glass-card p-8 rounded-2xl relative overflow-hidden group">
+                        <div class="absolute top-0 right-0 w-32 h-32 bg-cyber-green/10 rounded-full blur-3xl group-hover:bg-cyber-green/30 transition-all"></div>
+                        <i data-lucide="server-cog" class="w-10 h-10 text-cyber-green mb-6"></i>
+                        <h4 class="text-xl font-bold font-cyber text-gray-900 dark:text-white mb-3">Backend Developer</h4>
+                        <p class="text-gray-600 dark:text-gray-400 text-sm">Arsitek sistem di balik layar. Mengatur database, server, keamanan, dan logika aplikasi.</p>
+                    </div>
+
+                    <!-- Job 3 -->
+                    <div class="glass-card p-8 rounded-2xl relative overflow-hidden group border-cyber-blue/50">
+                        <div class="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 rounded-full blur-3xl group-hover:bg-purple-500/30 transition-all"></div>
+                        <i data-lucide="layers" class="w-10 h-10 text-purple-500 mb-6"></i>
+                        <h4 class="text-xl font-bold font-cyber text-gray-900 dark:text-white mb-3">Fullstack Developer</h4>
+                        <p class="text-gray-600 dark:text-gray-400 text-sm">Menguasai Frontend sekaligus Backend. "One-man army" yang sangat diincar startup & corporate.</p>
+                    </div>
+
+                    <!-- Job 4 -->
+                    <div class="glass-card p-8 rounded-2xl relative overflow-hidden group">
+                        <i data-lucide="ghost" class="w-10 h-10 text-orange-500 mb-6"></i>
+                        <h4 class="text-xl font-bold font-cyber text-gray-900 dark:text-white mb-3">Game Developer</h4>
+                        <p class="text-gray-600 dark:text-gray-400 text-sm">Merancang alur cerita, karakter, dan memprogram game untuk PC, Console, maupun Mobile.</p>
+                    </div>
+
+                    <!-- Job 5 -->
+                    <div class="glass-card p-8 rounded-2xl relative overflow-hidden group">
+                        <i data-lucide="smartphone" class="w-10 h-10 text-pink-500 mb-6"></i>
+                        <h4 class="text-xl font-bold font-cyber text-gray-900 dark:text-white mb-3">Mobile Developer</h4>
+                        <p class="text-gray-600 dark:text-gray-400 text-sm">Membuat aplikasi canggih untuk Android dan iOS menggunakan teknologi modern seperti Flutter/React Native.</p>
+                    </div>
+
+                    <!-- Job 6 -->
+                    <div class="glass-card p-8 rounded-2xl relative overflow-hidden group">
+                        <i data-lucide="shield-alert" class="w-10 h-10 text-red-500 mb-6"></i>
+                        <h4 class="text-xl font-bold font-cyber text-gray-900 dark:text-white mb-3">Cyber Security</h4>
+                        <p class="text-gray-600 dark:text-gray-400 text-sm">Menganalisis celah keamanan website dan aplikasi untuk melindunginya dari serangan hacker.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= KENAPA PPLG ================= -->
+        <section class="py-20 bg-cyber-green text-cyber-black overflow-hidden relative">
+            <!-- Background Pattern -->
+            <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(#000 1px, transparent 1px); background-size: 20px 20px;"></div>
+            
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 reveal">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-12">
+                    <div class="w-full md:w-1/2">
+                        <h2 class="text-4xl md:text-5xl font-black font-cyber mb-6 uppercase tracking-tight leading-normal">
+                            Kenapa Harus <br> Pilih PPLG?
+                        </h2>
+                        <p class="text-lg font-medium mb-8 max-w-md">
+                            Dunia bergerak ke arah digital. Mereka yang menguasai kode adalah mereka yang akan memimpin masa depan.
+                        </p>
+                        <a href="#timeline" data-cursor="hover" class="inline-flex items-center gap-2 bg-cyber-black text-cyber-green font-cyber font-bold px-6 py-3 hover:bg-white hover:text-black transition-colors">
+                            LIHAT ROADMAP <i data-lucide="arrow-right"></i>
+                        </a>
+                    </div>
+                    
+                    <div class="w-full md:w-1/2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="bg-black/10 backdrop-blur-md p-6 border border-black/20 hover:bg-black/20 transition-all">
+                            <i data-lucide="briefcase" class="mb-4 w-8 h-8"></i>
+                            <h4 class="font-bold font-cyber mb-2">Peluang Kerja Luas</h4>
+                            <p class="text-sm">Hampir semua industri butuh IT dan Programmer.</p>
+                        </div>
+                        <div class="bg-black/10 backdrop-blur-md p-6 border border-black/20 hover:bg-black/20 transition-all">
+                            <i data-lucide="dollar-sign" class="mb-4 w-8 h-8"></i>
+                            <h4 class="font-bold font-cyber mb-2">Gaji Sangat Tinggi</h4>
+                            <p class="text-sm">Standar gaji IT lebih tinggi dari rata-rata industri lain.</p>
+                        </div>
+                        <div class="bg-black/10 backdrop-blur-md p-6 border border-black/20 hover:bg-black/20 transition-all">
+                            <i data-lucide="globe-2" class="mb-4 w-8 h-8"></i>
+                            <h4 class="font-bold font-cyber mb-2">Kerja Remote / Freelance</h4>
+                            <p class="text-sm">Bisa kerja dari rumah atau cafe untuk klien luar negeri.</p>
+                        </div>
+                        <div class="bg-black/10 backdrop-blur-md p-6 border border-black/20 hover:bg-black/20 transition-all">
+                            <i data-lucide="cpu" class="mb-4 w-8 h-8"></i>
+                            <h4 class="font-bold font-cyber mb-2">Skill Masa Depan</h4>
+                            <p class="text-sm">Aman dari ancaman tergantikan AI, karena kitalah pembuatnya.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TIMELINE SECTION ================= -->
+        <section id="timeline" class="py-24 relative">
+            <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 reveal">
+                <div class="text-center mb-16">
+                    <h2 class="font-cyber text-sm font-bold text-cyber-blue tracking-widest uppercase mb-2">Roadmap Siswa</h2>
+                    <h3 class="text-3xl md:text-4xl font-bold font-cyber text-gray-900 dark:text-white">Perjalanan <span class="text-gradient">3 Tahun</span></h3>
+                </div>
+
+                <div class="relative timeline-container">
+                    
+                    <!-- Class 10 -->
+                    <div class="mb-12 flex justify-between items-center w-full relative z-10 md:flex-row flex-col">
+                        <div class="order-1 md:w-5/12 w-full md:text-right text-left pl-12 md:pl-0 md:pr-8 mb-4 md:mb-0">
+                            <h4 class="font-cyber text-2xl font-bold text-cyber-blue">KELAS 10</h4>
+                            <h5 class="text-gray-800 dark:text-white font-bold mb-2">Pondasi Dasar & Logika</h5>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">Pengenalan algoritma dasar, flowchart, dan logika pemrograman. Mempelajari dasar-dasar bahasa Java dan C, serta pengenalan pembuatan game menggunakan Godot Engine.</p>
+                        </div>
+                        <div class="order-1 md:w-2/12 flex justify-center absolute left-0 md:relative md:left-auto">
+                            <div class="w-8 h-8 rounded-full bg-cyber-blue border-4 border-white dark:border-cyber-black shadow-[0_0_15px_#00f3ff] z-20"></div>
+                        </div>
+                        <div class="order-1 md:w-5/12 w-full"></div>
+                    </div>
+
+                    <!-- Class 11 -->
+                    <div class="mb-12 flex justify-between items-center w-full relative z-10 md:flex-row-reverse flex-col">
+                        <div class="order-1 md:w-5/12 w-full text-left pl-12 md:pl-8 mb-4 md:mb-0">
+                            <h4 class="font-cyber text-2xl font-bold text-cyber-green">KELAS 11</h4>
+                            <h5 class="text-gray-800 dark:text-white font-bold mb-2">Interaktivitas & Database</h5>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">Belajar JavaScript, PHP, MySQL. Mulai membuat website dinamis yang bisa menyimpan data. Belajar UI/UX menggunakan Figma.</p>
+                        </div>
+                        <div class="order-1 md:w-2/12 flex justify-center absolute left-0 md:relative md:left-auto">
+                            <div class="w-8 h-8 rounded-full bg-cyber-green border-4 border-white dark:border-cyber-black shadow-[0_0_15px_#76b900] z-20"></div>
+                        </div>  
+                        <div class="order-1 md:w-5/12 w-full"></div>
+                    </div>
+
+                    <!-- Class 12 -->
+                    <div class="mb-12 flex justify-between items-center w-full relative z-10 md:flex-row flex-col">
+                        <div class="order-1 md:w-5/12 w-full md:text-right text-left pl-12 md:pl-0 md:pr-8 mb-4 md:mb-0">
+                            <h4 class="font-cyber text-2xl font-bold text-purple-500">KELAS 12</h4>
+                            <h5 class="text-gray-800 dark:text-white font-bold mb-2">Framework & Game / Project Akhir</h5>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">Pengenalan Framework (Laravel/React). Kolaborasi tim dengan Git. Ujian Kompetensi Keahlian (UKK), dan pembuatan Game/Software siap pakai.</p>
+                        </div>
+                        <div class="order-1 md:w-2/12 flex justify-center absolute left-0 md:relative md:left-auto">
+                            <div class="w-8 h-8 rounded-full bg-purple-500 border-4 border-white dark:border-cyber-black shadow-[0_0_15px_#a855f7] z-20"></div>
+                        </div>
+                        <div class="order-1 md:w-5/12 w-full"></div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= GALERI SECTION ================= -->
+        <section class="py-24 bg-gray-100/50 dark:bg-cyber-metallic/30 border-t border-gray-200 dark:border-gray-800">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 reveal">
+                <div class="text-center mb-16">
+                    <h2 class="font-cyber text-sm font-bold text-cyber-blue tracking-widest uppercase mb-2">Showcase</h2>
+                    <h3 class="text-3xl md:text-4xl font-bold font-cyber text-gray-900 dark:text-white">Aktivitas & <span class="text-cyber-green glow-text-green">Karya</span></h3>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Gallery Item -->
+                    <div class="group relative overflow-hidden rounded-xl border border-gray-700 aspect-video glass-card cursor-pointer" data-cursor="hover">
+                        <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Coding" class="object-cover w-full h-full group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-6 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <div>
+                                <h4 class="font-cyber font-bold text-white text-lg">Praktek Coding</h4>
+                                <p class="text-cyber-green text-sm">Lab Komputer PPLG</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Gallery Item -->
+                    <div class="group relative overflow-hidden rounded-xl border border-gray-700 aspect-video glass-card cursor-pointer" data-cursor="hover">
+                        <img src="https://images.unsplash.com/photo-1555680202-c86f0e12f086?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Game Dev" class="object-cover w-full h-full group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-6 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <div>
+                                <h4 class="font-cyber font-bold text-white text-lg">Game Development</h4>
+                                <p class="text-cyber-blue text-sm">Unity 3D Engine</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Gallery Item -->
+                    <div class="group relative overflow-hidden rounded-xl border border-gray-700 aspect-video glass-card cursor-pointer" data-cursor="hover">
+                        <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Teamwork" class="object-cover w-full h-full group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-6 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <div>
+                                <h4 class="font-cyber font-bold text-white text-lg">Team Collaboration</h4>
+                                <p class="text-purple-400 text-sm">Membangun startup sekolah</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TESTIMONI ================= -->
+        <section class="py-24 relative overflow-hidden">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 reveal">
+                <div class="text-center mb-16">
+                    <h2 class="font-cyber text-sm font-bold text-cyber-green tracking-widest uppercase mb-2">Testimoni</h2>
+                    <h3 class="text-3xl md:text-4xl font-bold font-cyber text-gray-900 dark:text-white">Kata <span class="text-gradient">Alumni</span></h3>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="glass-card p-6 rounded-2xl relative border-t-4 border-t-cyber-blue">
+                        <i data-lucide="quote" class="absolute top-6 right-6 text-gray-600 dark:text-gray-700 w-10 h-10 opacity-50"></i>
+                        <p class="text-gray-700 dark:text-gray-300 mb-6 relative z-10 italic">"Masuk PPLG adalah pilihan terbaik. saya sudah dapat tawaran kerja sebagai web developer di startup lokal."</p>
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-gray-300 dark:bg-gray-700 rounded-full flex items-center justify-center font-bold text-cyber-blue">AL</div>
+                            <div>
+                                <h5 class="font-bold text-gray-900 dark:text-white">Byatara</h5>
+                                <p class="text-xs text-cyber-blue">Web Developer</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="glass-card p-6 rounded-2xl relative border-t-4 border-t-cyber-green">
+                        <i data-lucide="quote" class="absolute top-6 right-6 text-gray-600 dark:text-gray-700 w-10 h-10 opacity-50"></i>
+                        <p class="text-gray-700 dark:text-gray-300 mb-6 relative z-10 italic">"Gurunya asik, materinya update. Belajar bikin game dari nol sampai bisa di-publish di Play Store. Seru banget!"</p>
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-gray-300 dark:bg-gray-700 rounded-full flex items-center justify-center font-bold text-cyber-green">BD</div>
+                            <div>
+                                <h5 class="font-bold text-gray-900 dark:text-white">Adhi</h5>
+                                <p class="text-xs text-cyber-green">Indie Game Dev Pelajar PPLG</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="glass-card p-6 rounded-2xl relative border-t-4 border-t-purple-500">
+                        <i data-lucide="quote" class="absolute top-6 right-6 text-gray-600 dark:text-gray-700 w-10 h-10 opacity-50"></i>
+                        <p class="text-gray-700 dark:text-gray-300 mb-6 relative z-10 italic">"Awalnya gaptek, tapi karena praktek terus tiap hari jadi terbiasa."</p>
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-gray-300 dark:bg-gray-700 rounded-full flex items-center justify-center font-bold text-purple-500">CT</div>
+                            <div>
+                                <h5 class="font-bold text-gray-900 dark:text-white">Rahma</h5>
+                                <p class="text-xs text-purple-500">Pelajar PPLG</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= FAQ SECTION ================= -->
+        <section class="py-24 bg-gray-100/50 dark:bg-cyber-metallic/30 border-y border-gray-200 dark:border-gray-800">
+            <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 reveal">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold font-cyber text-gray-900 dark:text-white">F.A.Q</h2>
+                    <p class="text-gray-600 dark:text-gray-400 mt-2">Pertanyaan yang sering ditanyakan</p>
+                </div>
+
+                <div class="space-y-4">
+                    <!-- Accordion 1 -->
+                    <div class="glass-card rounded-xl overflow-hidden">
+                        <button class="accordion-btn w-full px-6 py-4 flex justify-between items-center text-left focus:outline-none" data-cursor="hover">
+                            <span class="font-bold text-gray-900 dark:text-white">Apakah harus pintar matematika untuk masuk PPLG?</span>
+                            <i data-lucide="chevron-down" class="text-cyber-blue transition-transform duration-300"></i>
+                        </button>
+                        <div class="accordion-content bg-black/5 dark:bg-black/20">
+                            <p class="px-6 pb-4 text-gray-600 dark:text-gray-300 text-sm">Tidak wajib jago matematika tingkat dewa. Yang lebih ditekankan adalah logika dan kemampuan problem solving. Matematika dasar sudah cukup sebagai awalan.</p>
+                        </div>
+                    </div>
+                    <!-- Accordion 2 -->
+                    <div class="glass-card rounded-xl overflow-hidden">
+                        <button class="accordion-btn w-full px-6 py-4 flex justify-between items-center text-left focus:outline-none" data-cursor="hover">
+                            <span class="font-bold text-gray-900 dark:text-white">Apakah harus punya laptop gaming yang mahal?</span>
+                            <i data-lucide="chevron-down" class="text-cyber-blue transition-transform duration-300"></i>
+                        </button>
+                        <div class="accordion-content bg-black/5 dark:bg-black/20">
+                            <p class="px-6 pb-4 text-gray-600 dark:text-gray-300 text-sm">Tidak harus! Untuk coding web dasar, laptop standar sudah sangat cukup. Sekolah juga memfasilitasi Lab Komputer spesifikasi tinggi untuk praktik berat seperti Game Development.</p>
+                        </div>
+                    </div>
+                    <!-- Accordion 3 -->
+                    <div class="glass-card rounded-xl overflow-hidden">
+                        <button class="accordion-btn w-full px-6 py-4 flex justify-between items-center text-left focus:outline-none" data-cursor="hover">
+                            <span class="font-bold text-gray-900 dark:text-white">PPLG sama dengan RPL?</span>
+                            <i data-lucide="chevron-down" class="text-cyber-blue transition-transform duration-300"></i>
+                        </button>
+                        <div class="accordion-content bg-black/5 dark:bg-black/20">
+                            <p class="px-6 pb-4 text-gray-600 dark:text-gray-300 text-sm">Ya, PPLG adalah nama baru dari RPL (Rekayasa Perangkat Lunak) pada Kurikulum Merdeka, dengan penambahan fokus yang lebih kuat pada pengembangan Gim (Game).</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= FOOTER ================= -->
+        <footer class="bg-gray-200 dark:bg-cyber-black border-t border-gray-300 dark:border-gray-800 pt-16 pb-8 relative overflow-hidden">
+            <!-- Glow top -->
+            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-1 bg-gradient-to-r from-transparent via-cyber-blue to-transparent glow-blue"></div>
+            
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                    <div class="col-span-1 md:col-span-2">
+                        <a href="#" class="flex items-center gap-2 mb-4">
+                            <i data-lucide="terminal" class="text-cyber-green"></i>
+                            <span class="font-cyber font-bold text-2xl text-gray-900 dark:text-white">PPLG<span class="text-cyber-green">_</span></span>
+                        </a>
+                        <p class="text-gray-600 dark:text-gray-400 mb-6 max-w-sm">
+                            Mencetak generasi developer unggul, kreatif, dan inovatif siap menghadapi tantangan teknologi di masa depan.
+                        </p>
+                        <div class="flex gap-4">
+                            <a href="#" class="w-10 h-10 rounded-full border border-gray-400 dark:border-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-400 hover:border-cyber-blue hover:text-cyber-blue transition-colors" data-cursor="hover"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+                            <a href="#" class="w-10 h-10 rounded-full border border-gray-400 dark:border-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-400 hover:border-cyber-blue hover:text-cyber-blue transition-colors" data-cursor="hover"><i data-lucide="github" class="w-5 h-5"></i></a>
+                            <a href="#" class="w-10 h-10 rounded-full border border-gray-400 dark:border-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-400 hover:border-cyber-blue hover:text-cyber-blue transition-colors" data-cursor="hover"><i data-lucide="youtube" class="w-5 h-5"></i></a>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h4 class="font-cyber font-bold text-gray-900 dark:text-white mb-4">Navigasi</h4>
+                        <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                            <li><a href="#about" class="hover:text-cyber-green transition-colors">Tentang PPLG</a></li>
+                            <li><a href="#materi" class="hover:text-cyber-green transition-colors">Materi Belajar</a></li>
+                            <li><a href="#prospek" class="hover:text-cyber-green transition-colors">Prospek Kerja</a></li>
+                            <li><a href="#timeline" class="hover:text-cyber-green transition-colors">Roadmap</a></li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h4 class="font-cyber font-bold text-gray-900 dark:text-white mb-4">Kontak Info</h4>
+                        <ul class="space-y-3 text-sm text-gray-600 dark:text-gray-400">
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="map-pin" class="w-5 h-5 text-cyber-blue shrink-0"></i>
+                                <span>Jalan L.U. Adi Sucipto No. 38, Kelurahan Kerten, Kecamatan Laweyan, Kota Surakarta, Jawa Tengah, Kode Pos: 57143</span>
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <i data-lucide="phone" class="w-5 h-5 text-cyber-blue shrink-0"></i>
+                                <span>+62 852-9845-9963</span>
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <i data-lucide="mail" class="w-5 h-5 text-cyber-blue shrink-0"></i>
+                                <span>Kingagfox@gmail.com</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="border-t border-gray-300 dark:border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500">
+                    <p>&copy; 2026  Kingagfox. All rights reserved.</p>
+                    <div class="flex items-center gap-4">
+                        <button onclick="rebootSystem()" class="flex items-center gap-2 hover:text-cyber-green transition-colors font-cyber group" data-cursor="hover">
+                            <i data-lucide="power" class="w-4 h-4 group-hover:text-cyber-green"></i> <span class="tracking-widest">REBOOT_SYS</span>
+                        </button>
+                        <span class="hidden md:inline">|</span>
+                        <p>Designed with <i data-lucide="heart" class="w-3 h-3 inline text-red-500 mx-1"></i> and Code.</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <!-- ================= JAVASCRIPT ================= -->
+        <script>
+            // Initialize Lucide Icons
+            lucide.createIcons();
+
+            // 1. System Boot & Restart Logic
+            const bootMessages = [
+                "Mounting PPLG Core...",
+                "Loading Modules [HTML, CSS, JS]...",
+                "Connecting to Database...",
+                "Compiling Game Engine...",
+                "Bypassing Security Protocol...",
+                "System Ready."
+            ];
+
+            function runBootSequence(callback) {
+                const container = document.getElementById('boot-text-container');
+                container.innerHTML = '';
+                let delay = 0;
+                
+                bootMessages.forEach((msg, index) => {
+                    setTimeout(() => {
+                        const line = document.createElement('div');
+                        line.innerHTML = `> <span class="text-gray-300">${msg}</span> <span class="text-cyber-blue ml-1">[OK]</span>`;
+                        container.appendChild(line);
+                    }, delay);
+                    delay += 350; // 350ms per baris teks
+                });
+
+                setTimeout(() => {
+                    if (callback) callback();
+                }, delay + 600);
+            }
+
+            function hideLoader() {
+                const loader = document.getElementById('loader');
+                loader.style.opacity = '0';
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                    reveal(); // Trigger scroll animation
+                }, 500);
+            }
+
+            window.addEventListener('load', () => {
+                runBootSequence(hideLoader);
+            });
+
+            // Global Reboot Function
+            window.rebootSystem = function() {
+                const loader = document.getElementById('loader');
+                loader.style.display = 'flex';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                
+                // Menunggu display:flex teraplikasi sebelum merubah opacity
+                setTimeout(() => {
+                    loader.style.opacity = '1';
+                    setTimeout(() => {
+                        runBootSequence(hideLoader);
+                    }, 500);
+                }, 50);
+                
+                // Reload icon lucide di dalam loader
+                lucide.createIcons();
+            };
+
+            // 2. Theme Toggle (Dark/Light)
+            const htmlElement = document.documentElement;
+            const themeToggles = [document.getElementById('theme-toggle'), document.getElementById('theme-toggle-mobile')];
+            const themeIcons = [document.getElementById('theme-icon'), document.getElementById('theme-icon-mobile')];
+
+            // Default to dark, checking localstorage
+            if (localStorage.getItem('theme') === 'light') {
+                htmlElement.classList.remove('dark');
+                themeIcons.forEach(icon => {
+                    icon.setAttribute('data-lucide', 'sun');
+                    icon.classList.add('text-yellow-500');
+                });
+                lucide.createIcons();
+            }
+
+            themeToggles.forEach((btn, index) => {
+                btn?.addEventListener('click', () => {
+                    htmlElement.classList.toggle('dark');
+                    let isDark = htmlElement.classList.contains('dark');
+                    
+                    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+                    
+                    themeIcons.forEach(icon => {
+                        if(isDark) {
+                            icon.setAttribute('data-lucide', 'moon');
+                            icon.classList.remove('text-yellow-500');
+                            icon.classList.add('text-white');
+                        } else {
+                            icon.setAttribute('data-lucide', 'sun');
+                            icon.classList.remove('text-white');
+                            icon.classList.add('text-yellow-500');
+                        }
+                    });
+                    lucide.createIcons();
+                    initParticles(); // Re-init particles to match theme color
+                });
+            });
+
+            // 3. Mobile Menu Toggle
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            // Hide mobile menu on link click
+            mobileMenu.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
+                });
+            });
+
+            // 4. Navbar Active & Glassmorphism on Scroll
+            const navbar = document.getElementById('navbar');
+            
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('bg-white/80', 'dark:bg-cyber-black/80', 'backdrop-blur-md', 'shadow-lg', 'border-gray-200', 'dark:border-gray-800');
+                    navbar.classList.remove('bg-transparent', 'border-transparent');
+                } else {
+                    navbar.classList.remove('bg-white/80', 'dark:bg-cyber-black/80', 'backdrop-blur-md', 'shadow-lg', 'border-gray-200', 'dark:border-gray-800');
+                    navbar.classList.add('bg-transparent', 'border-transparent');
+                }
+            });
+
+            // 5. Scroll Reveal Animation using Intersection Observer
+            function reveal() {
+                var reveals = document.querySelectorAll(".reveal");
+                for (var i = 0; i < reveals.length; i++) {
+                    var windowHeight = window.innerHeight;
+                    var elementTop = reveals[i].getBoundingClientRect().top;
+                    var elementVisible = 150;
+                    
+                    if (elementTop < windowHeight - elementVisible) {
+                        reveals[i].classList.add("active");
+                    }
+                }
+            }
+            window.addEventListener("scroll", reveal);
+
+            // 6. Typing Animation
+            const typedTextSpan = document.getElementById("typing-text");
+            const textArray = ["Programmer.", "Game Developer.", "UI/UX Designer.", "AI Engineer."];
+            const typingDelay = 100;
+            const erasingDelay = 50;
+            const newTextDelay = 2000; // Delay between current and next text
+            let textArrayIndex = 0;
+            let charIndex = 0;
+
+            function type() {
+                if (charIndex < textArray[textArrayIndex].length) {
+                    typedTextSpan.textContent += textArray[textArrayIndex].charAt(charIndex);
+                    charIndex++;
+                    setTimeout(type, typingDelay);
+                } 
+                else {
+                    setTimeout(erase, newTextDelay);
+                }
+            }
+
+            function erase() {
+                if (charIndex > 0) {
+                    typedTextSpan.textContent = textArray[textArrayIndex].substring(0, charIndex-1);
+                    charIndex--;
+                    setTimeout(erase, erasingDelay);
+                } 
+                else {
+                    textArrayIndex++;
+                    if(textArrayIndex >= textArray.length) textArrayIndex = 0;
+                    setTimeout(type, typingDelay + 1100);
+                }
+            }
+            
+            // Start typing after loader
+            setTimeout(() => {
+                if(textArray.length) setTimeout(type, newTextDelay + 250);
+            }, 1500);
+
+
+            // 7. FAQ Accordion
+            const accordions = document.querySelectorAll('.accordion-btn');
+            accordions.forEach(acc => {
+                acc.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                    
+                    // Cari icon dengan selector 'svg' atau 'i' karena lucide merubah 'i' menjadi 'svg'
+                    const icon = this.querySelector('svg') || this.querySelector('i');
+                    const content = this.nextElementSibling;
+                    
+                    if (content.style.maxHeight) {
+                        content.style.maxHeight = null;
+                        if (icon) icon.style.transform = 'rotate(0deg)';
+                    } else {
+                        // Close others
+                        accordions.forEach(otherAcc => {
+                            if(otherAcc !== this) {
+                                otherAcc.classList.remove('active');
+                                if (otherAcc.nextElementSibling) {
+                                    otherAcc.nextElementSibling.style.maxHeight = null;
+                                }
+                                
+                                const otherIcon = otherAcc.querySelector('svg') || otherAcc.querySelector('i');
+                                if (otherIcon) otherIcon.style.transform = 'rotate(0deg)';
+                            }
+                        });
+                        content.style.maxHeight = content.scrollHeight + "px";
+                        if (icon) icon.style.transform = 'rotate(180deg)';
+                    }
+                });
+            });
+
+            // 8. Mouse Parallax Effect for Hero
+            document.addEventListener("mousemove", parallax);
+            function parallax(e) {
+                if(window.innerWidth < 768) return; // Disable on mobile
+                document.querySelectorAll("[data-parallax]").forEach(function(move){
+                    var moving_value = move.getAttribute("data-parallax") === 'bg' ? -20 : 40;
+                    var x = (e.clientX * moving_value) / 1000;
+                    var y = (e.clientY * moving_value) / 1000;
+                    move.style.transform = "translateX(" + x + "px) translateY(" + y + "px)";
+                });
+            }
+
+            // 9. Vanilla JS Particle Background
+            const canvas = document.getElementById("bg-canvas");
+            const ctx = canvas.getContext("2d");
+            let particlesArray;
+
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resizeCanvas);
+
+            class Particle {
+                constructor(x, y, directionX, directionY, size, color) {
+                    this.x = x;
+                    this.y = y;
+                    this.directionX = directionX;
+                    this.directionY = directionY;
+                    this.size = size;
+                    this.color = color;
+                }
+                draw() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+                    ctx.fillStyle = this.color;
+                    ctx.fill();
+                }
+                update() {
+                    if (this.x > canvas.width || this.x < 0) this.directionX = -this.directionX;
+                    if (this.y > canvas.height || this.y < 0) this.directionY = -this.directionY;
+                    this.x += this.directionX;
+                    this.y += this.directionY;
+                    this.draw();
+                }
+            }
+
+            function initParticles() {
+                resizeCanvas();
+                particlesArray = [];
+                let numberOfParticles = (canvas.height * canvas.width) / 15000;
+                // Determine color based on theme
+                let isDark = document.documentElement.classList.contains('dark');
+                let colorArray = isDark ? ['#00f3ff', '#76b900', '#333333'] : ['#00f3ff', '#76b900', '#cccccc'];
+
+                for (let i = 0; i < numberOfParticles; i++) {
+                    let size = (Math.random() * 2) + 1;
+                    let x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2);
+                    let y = (Math.random() * ((innerHeight - size * 2) - (size * 2)) + size * 2);
+                    let directionX = (Math.random() * 1) - 0.5;
+                    let directionY = (Math.random() * 1) - 0.5;
+                    let color = colorArray[Math.floor(Math.random() * colorArray.length)];
+                    
+                    particlesArray.push(new Particle(x, y, directionX, directionY, size, color));
+                }
+            }
+
+            function connectParticles() {
+                let opacityValue = 1;
+                let maxDistance = 150;
+                let isDark = document.documentElement.classList.contains('dark');
+                
+                for (let a = 0; a < particlesArray.length; a++) {
+                    for (let b = a; b < particlesArray.length; b++) {
+                        let distance = ((particlesArray[a].x - particlesArray[b].x) * (particlesArray[a].x - particlesArray[b].x)) + 
+                                    ((particlesArray[a].y - particlesArray[b].y) * (particlesArray[a].y - particlesArray[b].y));
+                        if (distance < (maxDistance * maxDistance)) {
+                            opacityValue = 1 - (distance / (maxDistance * maxDistance));
+                            ctx.strokeStyle = isDark ? `rgba(0, 243, 255, ${opacityValue * 0.2})` : `rgba(118, 185, 0, ${opacityValue * 0.2})`;
+                            ctx.lineWidth = 1;
+                            ctx.beginPath();
+                            ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+                            ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+                            ctx.stroke();
+                        }
+                    }
+                }
+            }
+
+            function animateParticles() {
+                requestAnimationFrame(animateParticles);
+                ctx.clearRect(0, 0, innerWidth, innerHeight);
+                for (let i = 0; i < particlesArray.length; i++) {
+                    particlesArray[i].update();
+                }
+                connectParticles();
+            }
+
+            initParticles();
+            animateParticles();
+
+        </script>
+    </body>
+    </html>
