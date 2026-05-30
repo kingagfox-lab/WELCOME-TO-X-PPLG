@@ -196,6 +196,45 @@
         </div>
     </div>
 
+    <!-- Modul Detail Modal (Pop-up) -->
+    <div id="module-modal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 sm:p-6 opacity-0 transition-opacity duration-300">
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm cursor-pointer" onclick="closeModuleModal()"></div>
+        
+        <!-- Modal Content -->
+        <div id="module-modal-content" class="glass-card relative w-full max-w-2xl p-6 sm:p-8 rounded-2xl transform scale-95 transition-transform duration-300 border-t-4 border-t-cyber-blue shadow-[0_0_50px_rgba(0,243,255,0.15)] z-10 max-h-[90vh] overflow-y-auto">
+            
+            <button onclick="closeModuleModal()" class="absolute top-4 right-4 text-gray-400 hover:text-red-500 transition-colors z-20">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+            
+            <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-6 pt-4 sm:pt-0">
+                <div id="modal-icon-container" class="w-16 h-16 shrink-0 rounded-xl flex items-center justify-center bg-black/50 border border-gray-700 shadow-inner">
+                    <!-- Icon will be injected here via JS -->
+                </div>
+                <div>
+                    <h3 id="modal-title" class="text-2xl md:text-3xl font-cyber font-bold text-gray-900 dark:text-white">Title</h3>
+                    <p id="modal-subtitle" class="text-cyber-blue text-sm font-cyber tracking-widest uppercase mt-1">Subtitle</p>
+                </div>
+            </div>
+            
+            <div class="prose prose-invert max-w-none">
+                <p id="modal-desc" class="text-gray-600 dark:text-gray-300 leading-relaxed text-sm sm:text-base"></p>
+                
+                <h4 class="font-cyber font-bold text-gray-800 dark:text-cyber-green mt-6 mb-3 text-lg border-b border-gray-700 pb-2">Yang Akan Dipelajari:</h4>
+                <ul id="modal-list" class="space-y-2 text-sm sm:text-base text-gray-600 dark:text-gray-400">
+                    <!-- List items will be injected here via JS -->
+                </ul>
+            </div>
+            
+            <div class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-800 flex justify-end">
+                <button onclick="closeModuleModal()" class="px-6 py-2 bg-gray-200 dark:bg-transparent border border-gray-400 dark:border-gray-600 text-gray-800 dark:text-gray-300 hover:border-cyber-blue hover:text-cyber-blue dark:hover:border-cyber-blue dark:hover:text-cyber-blue transition-colors font-cyber font-bold tracking-widest text-sm uppercase rounded">
+                    Tutup Modul
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Background Canvas for Particles -->
     <canvas id="bg-canvas"></canvas>
 
@@ -389,52 +428,52 @@
             
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 reveal">
                 <!-- Card 1 -->
-                <div class="glass-card p-6 rounded-xl flex flex-col items-center justify-center gap-4 group cursor-pointer" data-cursor="hover">
+                <div onclick="openModuleModal('html')" class="glass-card p-6 rounded-xl flex flex-col items-center justify-center gap-4 group cursor-pointer" data-cursor="hover">
                     <i data-lucide="file-code-2" class="w-12 h-12 text-orange-500 group-hover:scale-110 transition-transform"></i>
-                    <h4 class="font-bold font-cyber text-gray-900 dark:text-white">HTML & CSS</h4>
-                    <p class="text-xs text-gray-500">Struktur & Desain Web</p>
+                    <h4 class="font-bold font-cyber text-gray-900 dark:text-white text-center">HTML & CSS</h4>
+                    <p class="text-xs text-gray-500 text-center">Struktur & Desain Web</p>
                 </div>
                 <!-- Card 2 -->
-                <div class="glass-card p-6 rounded-xl flex flex-col items-center justify-center gap-4 group cursor-pointer" data-cursor="hover">
+                <div onclick="openModuleModal('js')" class="glass-card p-6 rounded-xl flex flex-col items-center justify-center gap-4 group cursor-pointer" data-cursor="hover">
                     <i data-lucide="file-json-2" class="w-12 h-12 text-yellow-400 group-hover:scale-110 transition-transform"></i>
-                    <h4 class="font-bold font-cyber text-gray-900 dark:text-white">JavaScript</h4>
-                    <p class="text-xs text-gray-500">Logika & Interaktivitas</p>
+                    <h4 class="font-bold font-cyber text-gray-900 dark:text-white text-center">JavaScript</h4>
+                    <p class="text-xs text-gray-500 text-center">Logika & Interaktivitas</p>
                 </div>
                 <!-- Card 3 -->
-                <div class="glass-card p-6 rounded-xl flex flex-col items-center justify-center gap-4 group cursor-pointer" data-cursor="hover">
+                <div onclick="openModuleModal('db')" class="glass-card p-6 rounded-xl flex flex-col items-center justify-center gap-4 group cursor-pointer" data-cursor="hover">
                     <i data-lucide="database" class="w-12 h-12 text-blue-500 group-hover:scale-110 transition-transform"></i>
-                    <h4 class="font-bold font-cyber text-gray-900 dark:text-white">Database</h4>
-                    <p class="text-xs text-gray-500">MySQL & Pengolahan Data</p>
+                    <h4 class="font-bold font-cyber text-gray-900 dark:text-white text-center">Database</h4>
+                    <p class="text-xs text-gray-500 text-center">MySQL & Pengolahan Data</p>
                 </div>
                 <!-- Card 4 -->
-                <div class="glass-card p-6 rounded-xl flex flex-col items-center justify-center gap-4 group cursor-pointer" data-cursor="hover">
+                <div onclick="openModuleModal('php')" class="glass-card p-6 rounded-xl flex flex-col items-center justify-center gap-4 group cursor-pointer" data-cursor="hover">
                     <i data-lucide="server" class="w-12 h-12 text-purple-500 group-hover:scale-110 transition-transform"></i>
-                    <h4 class="font-bold font-cyber text-gray-900 dark:text-white">PHP / Backend</h4>
-                    <p class="text-xs text-gray-500">Server Side Programming</p>
+                    <h4 class="font-bold font-cyber text-gray-900 dark:text-white text-center">PHP / Backend</h4>
+                    <p class="text-xs text-gray-500 text-center">Server Side Programming</p>
                 </div>
                 <!-- Card 5 -->
-                <div class="glass-card p-6 rounded-xl flex flex-col items-center justify-center gap-4 group cursor-pointer" data-cursor="hover">
+                <div onclick="openModuleModal('uiux')" class="glass-card p-6 rounded-xl flex flex-col items-center justify-center gap-4 group cursor-pointer" data-cursor="hover">
                     <i data-lucide="pen-tool" class="w-12 h-12 text-pink-500 group-hover:scale-110 transition-transform"></i>
-                    <h4 class="font-bold font-cyber text-gray-900 dark:text-white">UI / UX</h4>
-                    <p class="text-xs text-gray-500">Figma & User Experience</p>
+                    <h4 class="font-bold font-cyber text-gray-900 dark:text-white text-center">UI / UX</h4>
+                    <p class="text-xs text-gray-500 text-center">Figma & User Experience</p>
                 </div>
                 <!-- Card 6 -->
-                <div class="glass-card p-6 rounded-xl flex flex-col items-center justify-center gap-4 group cursor-pointer" data-cursor="hover">
+                <div onclick="openModuleModal('gamedev')" class="glass-card p-6 rounded-xl flex flex-col items-center justify-center gap-4 group cursor-pointer" data-cursor="hover">
                     <i data-lucide="gamepad-2" class="w-12 h-12 text-cyber-green group-hover:scale-110 transition-transform"></i>
-                    <h4 class="font-bold font-cyber text-gray-900 dark:text-white">Game Dev</h4>
-                    <p class="text-xs text-gray-500">Unity & C# / 2D & 3D Game</p>
+                    <h4 class="font-bold font-cyber text-gray-900 dark:text-white text-center">Game Dev</h4>
+                    <p class="text-xs text-gray-500 text-center">Unity & C# / 2D & 3D Game</p>
                 </div>
                 <!-- Card 7 -->
-                <div class="glass-card p-6 rounded-xl flex flex-col items-center justify-center gap-4 group cursor-pointer" data-cursor="hover">
+                <div onclick="openModuleModal('python')" class="glass-card p-6 rounded-xl flex flex-col items-center justify-center gap-4 group cursor-pointer" data-cursor="hover">
                     <i data-lucide="terminal" class="w-12 h-12 text-green-400 group-hover:scale-110 transition-transform"></i>
-                    <h4 class="font-bold font-cyber text-gray-900 dark:text-white">Python & AI</h4>
-                    <p class="text-xs text-gray-500">Algoritma & Basic AI</p>
+                    <h4 class="font-bold font-cyber text-gray-900 dark:text-white text-center">Python & AI</h4>
+                    <p class="text-xs text-gray-500 text-center">Algoritma & Basic AI</p>
                 </div>
                 <!-- Card 8 -->
-                <div class="glass-card p-6 rounded-xl flex flex-col items-center justify-center gap-4 group cursor-pointer" data-cursor="hover">
+                <div onclick="openModuleModal('git')" class="glass-card p-6 rounded-xl flex flex-col items-center justify-center gap-4 group cursor-pointer" data-cursor="hover">
                     <i data-lucide="github" class="w-12 h-12 text-gray-800 dark:text-white group-hover:scale-110 transition-transform"></i>
-                    <h4 class="font-bold font-cyber text-gray-900 dark:text-white">Git & GitHub</h4>
-                    <p class="text-xs text-gray-500">Version Control System</p>
+                    <h4 class="font-bold font-cyber text-gray-900 dark:text-white text-center">Git & GitHub</h4>
+                    <p class="text-xs text-gray-500 text-center">Version Control System</p>
                 </div>
             </div>
         </div>
@@ -909,7 +948,6 @@
         // 4. Navbar Active & Glassmorphism on Scroll
         const navbar = document.getElementById('navbar');
         window.addEventListener('scroll', () => {
-            // Gunakan requestAnimationFrame untuk peforma scroll navbar yang lebih halus
             window.requestAnimationFrame(() => {
                 if (window.scrollY > 50) {
                     navbar.classList.add('bg-white/80', 'dark:bg-cyber-black/80', 'backdrop-blur-md', 'shadow-lg', 'border-gray-200', 'dark:border-gray-800');
@@ -921,12 +959,12 @@
             });
         });
 
-        // 5. OPTIMASI: Scroll Reveal Animation menggunakan Intersection Observer (Bebas Lag)
+        // 5. Scroll Reveal Animation
         function initRevealObserver() {
             const reveals = document.querySelectorAll(".reveal");
             const observerOptions = {
                 root: null,
-                rootMargin: '0px 0px -50px 0px', // Aktif ketika elemen hampir masuk layar
+                rootMargin: '0px 0px -50px 0px', 
                 threshold: 0.1
             };
 
@@ -934,7 +972,6 @@
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add("active");
-                        // Hentikan pemantauan elemen yang sudah aktif agar hemat resource
                         observer.unobserve(entry.target);
                     }
                 });
@@ -1010,6 +1047,136 @@
             });
         });
 
+        // ================= FITUR BARU: MODAL MATERI =================
+        const modulesData = {
+            'html': {
+                title: 'HTML & CSS',
+                subtitle: 'Struktur & Desain Web',
+                icon: 'file-code-2',
+                iconColor: 'text-orange-500',
+                desc: 'Membangun pondasi sebuah website. HTML adalah kerangka strukturnya, sedangkan CSS adalah gaya dan bajunya. Di modul ini, kamu akan diajarkan membuat tampilan web yang menarik, modern, dan pastinya responsif untuk dibuka di HP maupun Laptop.',
+                list: ['Memahami tag HTML Semantik (HTML5)', 'Styling dengan CSS murni & Flexbox/Grid', 'Membuat website responsif (Mobile First)', 'Animasi CSS tingkat dasar & lanjut', 'Pengenalan Framework Modern (Tailwind CSS)']
+            },
+            'js': {
+                title: 'JavaScript',
+                subtitle: 'Logika & Interaktivitas',
+                icon: 'file-json-2',
+                iconColor: 'text-yellow-400',
+                desc: 'Website yang statis terasa membosankan. JavaScript adalah bahasa ajaib yang memberikan "nyawa" pada website kamu! Kamu akan belajar membuat elemen yang bisa diklik, form validasi, hingga mengambil data dari server luar secara langsung.',
+                list: ['Dasar variabel, fungsi, & logika (If/Else, Looping)', 'DOM Manipulation (Mengubah HTML via kode)', 'Event Listener (Klik, Scroll, Hover)', 'Asynchronous JS (Fetch API / AJAX)', 'Pengenalan React.js / Vue.js']
+            },
+            'db': {
+                title: 'Database',
+                subtitle: 'MySQL & Pengolahan Data',
+                icon: 'database',
+                iconColor: 'text-blue-500',
+                desc: 'Data adalah aset paling berharga di era digital. Di modul ini, kamu akan mempelajari cara merancang dan membuat tempat penyimpanan data (basis data) yang aman dan rapi untuk mendukung aplikasi yang kamu buat.',
+                list: ['Konsep Relational Database (RDBMS)', 'Perintah Dasar SQL (CRUD: Create, Read, Update, Delete)', 'Relasi antar tabel (Join)', 'Keamanan Data & Enkripsi', 'Export/Import Database']
+            },
+            'php': {
+                title: 'PHP / Backend',
+                subtitle: 'Server Side Programming',
+                icon: 'server',
+                iconColor: 'text-purple-500',
+                desc: 'Bagaimana sistem pendaftaran akun, login, dan dashboard bekerja di balik layar? Modul Backend ini akan mengajarkanmu cara membuat server-side logic menggunakan PHP dan menyambungkannya dengan Database.',
+                list: ['Sintaks Dasar PHP & Pemrosesan Form', 'Session & Cookies (Sistem Login)', 'Koneksi PHP ke MySQL', 'Membuat API untuk aplikasi mobile', 'Pengenalan Framework Laravel']
+            },
+            'uiux': {
+                title: 'UI / UX Design',
+                subtitle: 'Figma & User Experience',
+                icon: 'pen-tool',
+                iconColor: 'text-pink-500',
+                desc: 'Sebuah aplikasi tidak hanya dituntut untuk berfungsi, tapi juga harus nyaman digunakan. Di modul ini, sebelum mulai coding, kita akan merancang prototipe tampilannya terlebih dahulu menggunakan tools desain standar industri.',
+                list: ['Prinsip Dasar Desain & Warna', 'User Experience (Riset & Alur Pengguna)', 'Membuat Wireframe & Mockup', 'Prototyping menggunakan Figma', 'Hand-off desain ke developer']
+            },
+            'gamedev': {
+                title: 'Game Development',
+                subtitle: 'Unity & C# / 2D & 3D Game',
+                icon: 'gamepad-2',
+                iconColor: 'text-cyber-green',
+                desc: 'Wujudkan imajinasimu menjadi sebuah Video Game! Ini adalah bagian paling seru di jurusan PPLG. Kamu akan diajarkan cara membuat game dari nol, mengatur fisika karakter, hingga mempublikasikannya agar bisa dimainkan orang lain.',
+                list: ['Pengenalan Game Engine (Unity / Godot)', 'Logika & Fisika dalam Game (Gravitasi, Tabrakan)', 'Pemrograman C# untuk Game', 'Desain Level & Animasi Karakter', 'Build game ke PC / Android']
+            },
+            'python': {
+                title: 'Python & AI',
+                subtitle: 'Algoritma & Basic AI',
+                icon: 'terminal',
+                iconColor: 'text-green-400',
+                desc: 'Bahasa pemrograman yang paling dicari di era Kecerdasan Buatan (AI). Python sangat mudah dipelajari namun sangat kuat fungsinya. Kamu akan belajar mengolah data, membuat bot cerdas, hingga pengenalan Machine Learning.',
+                list: ['Dasar Sintaks Python (Sangat Ramah Pemula)', 'Struktur Data (List, Dictionary, dll)', 'Pembuatan Bot Telegram / Discord', 'Web Scraping (Mengambil data otomatis dari web)', 'Pengenalan Logika AI & Machine Learning Dasar']
+            },
+            'git': {
+                title: 'Git & GitHub',
+                subtitle: 'Version Control System',
+                icon: 'github',
+                iconColor: 'text-gray-800 dark:text-white',
+                desc: 'Programmer profesional tidak pernah bekerja sendiri dan tidak menyalin file manual pakai Flashdisk! Git digunakan untuk merekam setiap perubahan kodemu, dan GitHub adalah wadah kolaborasinya.',
+                list: ['Konsep Version Control System', 'Perintah Dasar Git (Commit, Push, Pull)', 'Manajemen Branch (Cabang Kode)', 'Kolaborasi Tim (Merge & Resolve Conflict)', 'Membangun Portofolio di GitHub']
+            }
+        };
+
+        function openModuleModal(moduleId) {
+            const data = modulesData[moduleId];
+            if (!data) return;
+
+            // Masukkan data ke dalam elemen HTML modal
+            document.getElementById('modal-title').textContent = data.title;
+            document.getElementById('modal-subtitle').textContent = data.subtitle;
+            document.getElementById('modal-desc').textContent = data.desc;
+
+            // Masukkan Icon
+            const iconContainer = document.getElementById('modal-icon-container');
+            iconContainer.innerHTML = `<i data-lucide="${data.icon}" class="w-8 h-8 ${data.iconColor}"></i>`;
+
+            // Masukkan List yang akan dipelajari
+            const listContainer = document.getElementById('modal-list');
+            listContainer.innerHTML = data.list.map(item => `
+                <li class="flex items-start gap-3">
+                    <i data-lucide="check" class="w-5 h-5 text-cyber-green shrink-0 mt-0.5"></i>
+                    <span>${item}</span>
+                </li>
+            `).join('');
+
+            // Panggil ulang Lucide Icon untuk mengubah tag <i> baru menjadi <svg>
+            lucide.createIcons();
+
+            // Tampilkan Modal
+            const modal = document.getElementById('module-modal');
+            const modalContent = document.getElementById('module-modal-content');
+            
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            
+            // Sedikit delay agar transisi CSS berjalan (dari opacity 0 ke 1)
+            setTimeout(() => {
+                modal.style.opacity = '1';
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }, 10);
+            
+            // Kunci background agar tidak bisa di-scroll saat modal terbuka
+            document.body.style.overflow = 'hidden'; 
+        }
+
+        function closeModuleModal() {
+            const modal = document.getElementById('module-modal');
+            const modalContent = document.getElementById('module-modal-content');
+            
+            // Animasi menghilang (mengurangi opacity)
+            modal.style.opacity = '0';
+            modalContent.classList.remove('scale-100');
+            modalContent.classList.add('scale-95');
+            
+            // Sembunyikan elemen setelah animasi selesai (300ms)
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                
+                // Kembalikan kemampuan scroll pada background
+                document.body.style.overflow = ''; 
+            }, 300);
+        }
+
         // 8. Mouse Parallax Effect for Hero
         document.addEventListener("mousemove", parallax);
         function parallax(e) {
@@ -1022,7 +1189,7 @@
             });
         }
 
-        // 9. OPTIMASI: Vanilla JS Particle Background
+        // 9. Vanilla JS Particle Background
         const canvas = document.getElementById("bg-canvas");
         const ctx = canvas.getContext("2d");
         let particlesArray;
@@ -1061,9 +1228,7 @@
             resizeCanvas();
             particlesArray = [];
             
-            // OPTIMASI: Deteksi HP dan sangat kurangi jumlah partikel
             let isMobile = window.innerWidth < 768;
-            // Batas maksimal: 35 partikel untuk mobile, atau proporsi normal jika di Desktop (maks 100)
             let maxParticles = isMobile ? 35 : 100; 
             let density = isMobile ? 30000 : 15000; 
             let numberOfParticles = Math.min((canvas.height * canvas.width) / density, maxParticles);
@@ -1085,7 +1250,6 @@
 
         function connectParticles() {
             let opacityValue = 1;
-            // OPTIMASI: Kurangi panjang garis penghubung di HP agar lebih ringan
             let isMobile = window.innerWidth < 768;
             let maxDistance = isMobile ? 80 : 150; 
             let isDark = document.documentElement.classList.contains('dark');
