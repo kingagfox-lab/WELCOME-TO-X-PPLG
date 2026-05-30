@@ -33,7 +33,7 @@
                             card: '#1a1e29',
                             blue: '#00f3ff',
                             blueHover: '#00c3cc',
-                            green: '#76b900', // NVIDIA Green
+                            green: '#76b900',
                             greenHover: '#5e9400'
                         }
                     },
@@ -53,7 +53,7 @@
         }
     </script>
 
-    <!-- Custom CSS (Glow, Animations, Scrollbar) -->
+    <!-- Custom CSS -->
     <style>
         body {
             background-color: #f0f0f0;
@@ -70,13 +70,11 @@
             color: #e2e8f0;
         }
 
-        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 10px; }
         ::-webkit-scrollbar-track { background: theme('colors.cyber.black'); }
         ::-webkit-scrollbar-thumb { background: theme('colors.cyber.metallic'); border-radius: 5px; border: 1px solid theme('colors.cyber.green'); }
         ::-webkit-scrollbar-thumb:hover { background: theme('colors.cyber.green'); }
 
-        /* Typography Gradients */
         .text-gradient {
             background: linear-gradient(to right, theme('colors.cyber.green'), theme('colors.cyber.blue'));
             -webkit-background-clip: text;
@@ -84,20 +82,12 @@
             background-clip: text;
         }
 
-        /* Glow Effects */
         .glow-text-blue { text-shadow: 0 0 10px theme('colors.cyber.blue'), 0 0 20px theme('colors.cyber.blue'); }
         .glow-text-green { text-shadow: 0 0 10px theme('colors.cyber.green'), 0 0 20px theme('colors.cyber.green'); }
         
-        .glow-border-blue {
-            box-shadow: 0 0 15px rgba(0, 243, 255, 0.3), inset 0 0 15px rgba(0, 243, 255, 0.1);
-            border-color: theme('colors.cyber.blue');
-        }
-        .glow-border-green {
-            box-shadow: 0 0 15px rgba(118, 185, 0, 0.3), inset 0 0 15px rgba(118, 185, 0, 0.1);
-            border-color: theme('colors.cyber.green');
-        }
+        .glow-border-blue { box-shadow: 0 0 15px rgba(0, 243, 255, 0.3), inset 0 0 15px rgba(0, 243, 255, 0.1); border-color: theme('colors.cyber.blue'); }
+        .glow-border-green { box-shadow: 0 0 15px rgba(118, 185, 0, 0.3), inset 0 0 15px rgba(118, 185, 0, 0.1); border-color: theme('colors.cyber.green'); }
 
-        /* Glassmorphism Cards */
         .glass-card {
             background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(10px);
@@ -115,7 +105,6 @@
             box-shadow: 0 10px 30px -10px theme('colors.cyber.green');
         }
 
-        /* Scroll Reveal Animation */
         .reveal {
             opacity: 0;
             transform: translateY(50px);
@@ -126,17 +115,15 @@
             transform: translateY(0);
         }
 
-        /* Background Canvas */
         #bg-canvas {
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
             z-index: -1;
             opacity: 0.4;
-            pointer-events: none; /* Cegah interaksi touch yang tidak perlu di HP */
+            pointer-events: none;
         }
 
-        /* Loading Screen */
         #loader {
             position: fixed;
             inset: 0;
@@ -157,7 +144,6 @@
             animation: spin 1.5s linear infinite;
         }
         
-        /* Typing cursor */
         .typing-cursor::after {
             content: '|';
             animation: blink 1s step-end infinite;
@@ -165,7 +151,6 @@
         }
         @keyframes blink { 50% { opacity: 0; } }
 
-        /* Timeline */
         .timeline-container::after {
             content: ''; position: absolute; width: 4px;
             background: linear-gradient(to bottom, theme('colors.cyber.green'), theme('colors.cyber.blue'));
@@ -175,11 +160,29 @@
             .timeline-container::after { left: 31px; }
         }
 
-        /* Accordion transition */
         .accordion-content {
             transition: max-height 0.3s ease-out, padding 0.3s ease;
             max-height: 0;
             overflow: hidden;
+        }
+
+        /* Styling Kuis */
+        .quiz-option {
+            transition: all 0.2s ease;
+        }
+        .quiz-option.correct {
+            background-color: rgba(118, 185, 0, 0.2);
+            border-color: theme('colors.cyber.green');
+            box-shadow: 0 0 15px rgba(118, 185, 0, 0.3);
+        }
+        .quiz-option.wrong {
+            background-color: rgba(239, 68, 68, 0.2);
+            border-color: #ef4444;
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.3);
+        }
+        .quiz-option.disabled {
+            pointer-events: none;
+            opacity: 0.7;
         }
     </style>
 </head>
@@ -191,77 +194,60 @@
         <h2 class="font-cyber text-2xl font-bold tracking-widest text-gradient">SYS_INIT_PPLG</h2>
         <div class="text-left w-72 h-32 mt-4 overflow-hidden relative border border-cyber-green/20 bg-black/50 p-3 rounded-lg shadow-[0_0_15px_rgba(118,185,0,0.1)]">
             <div id="boot-text-container" class="absolute bottom-3 w-full font-mono text-xs flex flex-col gap-1.5">
-                <!-- Baris terminal akan dimunculkan melalui JS -->
+                <!-- Teks Booting Muncul di Sini -->
             </div>
         </div>
     </div>
 
     <!-- Modul Detail Modal (Pop-up) -->
     <div id="module-modal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 sm:p-6 opacity-0 transition-opacity duration-300">
-        <!-- Backdrop -->
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm cursor-pointer" onclick="closeModuleModal()"></div>
-        
-        <!-- Modal Content -->
         <div id="module-modal-content" class="glass-card relative w-full max-w-2xl p-6 sm:p-8 rounded-2xl transform scale-95 transition-transform duration-300 border-t-4 border-t-cyber-blue shadow-[0_0_50px_rgba(0,243,255,0.15)] z-10 max-h-[90vh] overflow-y-auto">
-            
             <button onclick="closeModuleModal()" class="absolute top-4 right-4 text-gray-400 hover:text-red-500 transition-colors z-20">
                 <i data-lucide="x" class="w-6 h-6"></i>
             </button>
-            
             <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-6 pt-4 sm:pt-0">
-                <div id="modal-icon-container" class="w-16 h-16 shrink-0 rounded-xl flex items-center justify-center bg-black/50 border border-gray-700 shadow-inner">
-                    <!-- Icon will be injected here via JS -->
-                </div>
+                <div id="modal-icon-container" class="w-16 h-16 shrink-0 rounded-xl flex items-center justify-center bg-black/50 border border-gray-700 shadow-inner"></div>
                 <div>
                     <h3 id="modal-title" class="text-2xl md:text-3xl font-cyber font-bold text-gray-900 dark:text-white">Title</h3>
                     <p id="modal-subtitle" class="text-cyber-blue text-sm font-cyber tracking-widest uppercase mt-1">Subtitle</p>
                 </div>
             </div>
-            
             <div class="prose prose-invert max-w-none">
                 <p id="modal-desc" class="text-gray-600 dark:text-gray-300 leading-relaxed text-sm sm:text-base"></p>
-                
                 <h4 class="font-cyber font-bold text-gray-800 dark:text-cyber-green mt-6 mb-3 text-lg border-b border-gray-700 pb-2">Yang Akan Dipelajari:</h4>
-                <ul id="modal-list" class="space-y-2 text-sm sm:text-base text-gray-600 dark:text-gray-400">
-                    <!-- List items will be injected here via JS -->
-                </ul>
+                <ul id="modal-list" class="space-y-2 text-sm sm:text-base text-gray-600 dark:text-gray-400"></ul>
             </div>
-            
             <div class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-800 flex justify-end">
-                <button onclick="closeModuleModal()" class="px-6 py-2 bg-gray-200 dark:bg-transparent border border-gray-400 dark:border-gray-600 text-gray-800 dark:text-gray-300 hover:border-cyber-blue hover:text-cyber-blue dark:hover:border-cyber-blue dark:hover:text-cyber-blue transition-colors font-cyber font-bold tracking-widest text-sm uppercase rounded">
+                <button onclick="closeModuleModal()" class="px-6 py-2 bg-gray-200 dark:bg-transparent border border-gray-400 dark:border-gray-600 text-gray-800 dark:text-gray-300 hover:border-cyber-blue hover:text-cyber-blue transition-colors font-cyber font-bold tracking-widest text-sm uppercase rounded">
                     Tutup Modul
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Background Canvas for Particles -->
+    <!-- Background Canvas -->
     <canvas id="bg-canvas"></canvas>
 
     <!-- Navbar -->
     <nav id="navbar" class="fixed w-full z-50 transition-all duration-300 bg-transparent py-4 border-b border-transparent">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center">
-                <!-- Logo -->
-                <a href="#" class="flex items-center gap-2 group cursor-pointer" data-cursor="hover">
+                <a href="#" class="flex items-center gap-2 group cursor-pointer">
                     <i data-lucide="terminal" class="text-cyber-green group-hover:text-cyber-blue transition-colors"></i>
                     <span class="font-cyber font-bold text-2xl tracking-wider text-black dark:text-white group-hover:text-gradient transition-all">PPLG<span class="text-cyber-green">_</span></span>
                 </a>
-
-                <!-- Desktop Menu -->
                 <div class="hidden md:flex space-x-8 items-center font-cyber text-sm tracking-wide">
-                    <a href="#about" class="text-gray-600 dark:text-gray-300 hover:text-cyber-green dark:hover:text-cyber-blue transition-colors" data-cursor="hover">01. Tentang</a>
-                    <a href="#materi" class="text-gray-600 dark:text-gray-300 hover:text-cyber-green dark:hover:text-cyber-blue transition-colors" data-cursor="hover">02. Materi</a>
-                    <a href="#prospek" class="text-gray-600 dark:text-gray-300 hover:text-cyber-green dark:hover:text-cyber-blue transition-colors" data-cursor="hover">03. Karier</a>
-                    <a href="#timeline" class="text-gray-600 dark:text-gray-300 hover:text-cyber-green dark:hover:text-cyber-blue transition-colors" data-cursor="hover">04. Roadmap</a>
+                    <a href="#about" class="text-gray-600 dark:text-gray-300 hover:text-cyber-green dark:hover:text-cyber-blue transition-colors">01. Tentang</a>
+                    <a href="#materi" class="text-gray-600 dark:text-gray-300 hover:text-cyber-green dark:hover:text-cyber-blue transition-colors">02. Materi</a>
+                    <a href="#prospek" class="text-gray-600 dark:text-gray-300 hover:text-cyber-green dark:hover:text-cyber-blue transition-colors">03. Karier</a>
+                    <a href="#timeline" class="text-gray-600 dark:text-gray-300 hover:text-cyber-green dark:hover:text-cyber-blue transition-colors">04. Roadmap</a>
+                    <a href="#quiz-section" class="text-cyber-green hover:text-cyber-blue transition-colors font-bold">05. Kuis</a>
                     
-                    <!-- Theme Toggle -->
-                    <button id="theme-toggle" class="p-2 rounded-full border border-gray-300 dark:border-gray-700 hover:border-cyber-green dark:hover:border-cyber-blue transition-all" data-cursor="hover">
+                    <button id="theme-toggle" class="p-2 rounded-full border border-gray-300 dark:border-gray-700 hover:border-cyber-green dark:hover:border-cyber-blue transition-all">
                         <i data-lucide="moon" id="theme-icon" class="w-5 h-5 text-gray-800 dark:text-white"></i>
                     </button>
                 </div>
-
-                <!-- Mobile Menu Button -->
                 <div class="md:hidden flex items-center gap-4">
                     <button id="theme-toggle-mobile" class="p-2 text-gray-800 dark:text-white">
                         <i data-lucide="moon" id="theme-icon-mobile" class="w-5 h-5"></i>
@@ -273,26 +259,24 @@
             </div>
         </div>
         
-        <!-- Mobile Menu -->
         <div id="mobile-menu" class="hidden md:hidden bg-white/95 dark:bg-cyber-black/95 backdrop-blur-lg border-b border-gray-200 dark:border-gray-800 absolute w-full">
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 font-cyber">
                 <a href="#about" class="block px-3 py-2 rounded-md text-base font-medium text-gray-800 dark:text-gray-200 hover:text-cyber-green">01. Tentang</a>
                 <a href="#materi" class="block px-3 py-2 rounded-md text-base font-medium text-gray-800 dark:text-gray-200 hover:text-cyber-green">02. Materi</a>
                 <a href="#prospek" class="block px-3 py-2 rounded-md text-base font-medium text-gray-800 dark:text-gray-200 hover:text-cyber-green">03. Karier</a>
                 <a href="#timeline" class="block px-3 py-2 rounded-md text-base font-medium text-gray-800 dark:text-gray-200 hover:text-cyber-green">04. Roadmap</a>
+                <a href="#quiz-section" class="block px-3 py-2 rounded-md text-base font-bold text-cyber-green hover:text-cyber-blue">05. Kuis Wawasan</a>
             </div>
         </div>
     </nav>
 
     <!-- ================= HERO SECTION ================= -->
     <section id="hero" class="relative min-h-screen flex items-center pt-20 overflow-hidden" data-parallax="bg">
-        <!-- Decoration elements -->
         <div class="absolute top-1/4 left-10 w-72 h-72 bg-cyber-green rounded-full mix-blend-multiply filter blur-[128px] opacity-20 dark:opacity-40 animate-pulse-slow"></div>
         <div class="absolute bottom-1/4 right-10 w-72 h-72 bg-cyber-blue rounded-full mix-blend-multiply filter blur-[128px] opacity-20 dark:opacity-40 animate-pulse-slow" style="animation-delay: 1.5s;"></div>
 
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full flex flex-col md:flex-row items-center justify-between gap-12">
             
-            <!-- Hero Text -->
             <div class="w-full md:w-1/2 space-y-6 text-center md:text-left z-10" data-parallax="element">
                 <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-cyber-green/50 bg-cyber-green/10 text-cyber-green font-cyber text-xs tracking-widest mb-4">
                     <span class="w-2 h-2 rounded-full bg-cyber-green animate-ping"></span>
@@ -304,7 +288,6 @@
                     <span class="text-gradient drop-shadow-lg glow-text-blue">Teknologi</span>
                 </h1>
                 
-                <!-- Typing Effect -->
                 <div class="h-16 md:h-20">
                     <p class="text-xl md:text-2xl font-light text-gray-600 dark:text-gray-300 font-cyber typing-cursor">
                         Kami Mencetak <span id="typing-text" class="font-bold text-cyber-green"></span>
@@ -316,30 +299,25 @@
                 </p>
 
                 <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start pt-4">
-                    <a href="#about" data-cursor="hover" class="relative group inline-flex items-center justify-center px-8 py-3 font-cyber font-bold tracking-widest text-black bg-cyber-green border border-cyber-green hover:bg-cyber-greenHover rounded-none overflow-hidden transition-all glow-border-green">
+                    <a href="#about" class="relative group inline-flex items-center justify-center px-8 py-3 font-cyber font-bold tracking-widest text-black bg-cyber-green border border-cyber-green hover:bg-cyber-greenHover rounded-none overflow-hidden transition-all glow-border-green">
                         <span class="absolute w-0 h-0 transition-all duration-500 ease-out bg-white rounded-full group-hover:w-56 group-hover:h-56 opacity-10"></span>
                         <span class="relative flex items-center gap-2">START_SYSTEM <i data-lucide="chevron-right"></i></span>
                     </a>
-                    <a href="#materi" data-cursor="hover" class="inline-flex items-center justify-center px-8 py-3 font-cyber font-bold tracking-widest text-gray-900 dark:text-white border-2 border-gray-900 dark:border-gray-700 hover:border-cyber-blue dark:hover:border-cyber-blue hover:text-cyber-blue dark:hover:text-cyber-blue transition-all">
+                    <a href="#materi" class="inline-flex items-center justify-center px-8 py-3 font-cyber font-bold tracking-widest text-gray-900 dark:text-white border-2 border-gray-900 dark:border-gray-700 hover:border-cyber-blue dark:hover:border-cyber-blue hover:text-cyber-blue dark:hover:text-cyber-blue transition-all">
                         VIEW_MODULES
                     </a>
                 </div>
             </div>
 
-            <!-- Hero Image/Illustration (CSS/HTML Art) -->
             <div class="w-full md:w-1/2 relative h-[400px] flex justify-center items-center animate-float">
                 <div class="relative w-80 h-80 z-10 perspective-1000">
-                    <!-- Tech Ring Back -->
                     <div class="absolute inset-0 border-4 border-dashed border-cyber-blue/30 rounded-full animate-spin-slow"></div>
-                    <!-- Core Setup illustration using Tailwind -->
                     <div class="absolute inset-4 bg-gradient-to-br from-cyber-card to-cyber-metallic rounded-2xl border border-cyber-green/50 shadow-[0_0_50px_rgba(118,185,0,0.2)] flex flex-col overflow-hidden glass-card">
-                        <!-- Top Bar -->
                         <div class="h-6 bg-gray-900 border-b border-gray-700 flex items-center px-3 gap-1.5">
                             <div class="w-2.5 h-2.5 rounded-full bg-red-500"></div>
                             <div class="w-2.5 h-2.5 rounded-full bg-yellow-500"></div>
                             <div class="w-2.5 h-2.5 rounded-full bg-green-500"></div>
                         </div>
-                        <!-- IDE Mockup -->
                         <div class="flex-1 p-4 font-mono text-xs sm:text-sm text-left text-gray-400">
                             <p><span class="text-pink-500">import</span> { <span class="text-cyber-blue">Future</span> } <span class="text-pink-500">from</span> <span class="text-cyber-green">'./PPLG'</span>;</p>
                             <br>
@@ -354,7 +332,6 @@
                             <p class="text-cyber-green mt-2 animate-pulse">> SUCCESS: World Changed.</p>
                         </div>
                     </div>
-                    <!-- Floating Icons -->
                     <div class="absolute -top-4 -left-4 w-12 h-12 bg-white dark:bg-cyber-metallic rounded-xl border border-cyber-blue/50 flex items-center justify-center animate-bounce" style="animation-delay: 0.2s">
                         <i data-lucide="gamepad-2" class="text-cyber-blue"></i>
                     </div>
@@ -378,7 +355,6 @@
                     <div class="absolute -inset-1 bg-gradient-to-r from-cyber-green to-cyber-blue rounded-2xl blur opacity-30"></div>
                     <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Cyber Security & Setup" class="relative rounded-2xl border border-gray-700 w-full object-cover h-[400px]">
                     
-                    <!-- Overlay Badge -->
                     <div class="absolute bottom-6 left-6 glass-card p-4 rounded-xl border-l-4 border-l-cyber-blue">
                         <p class="font-cyber font-bold text-2xl text-white">100%</p>
                         <p class="text-xs text-gray-300 font-cyber tracking-wider">FOKUS TEKNOLOGI</p>
@@ -427,50 +403,42 @@
             </div>
             
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 reveal">
-                <!-- Card 1 -->
-                <div onclick="openModuleModal('html')" class="glass-card p-6 rounded-xl flex flex-col items-center justify-center gap-4 group cursor-pointer" data-cursor="hover">
+                <div onclick="openModuleModal('html')" class="glass-card p-6 rounded-xl flex flex-col items-center justify-center gap-4 group cursor-pointer hover:-translate-y-2 transition-all">
                     <i data-lucide="file-code-2" class="w-12 h-12 text-orange-500 group-hover:scale-110 transition-transform"></i>
                     <h4 class="font-bold font-cyber text-gray-900 dark:text-white text-center">HTML & CSS</h4>
                     <p class="text-xs text-gray-500 text-center">Struktur & Desain Web</p>
                 </div>
-                <!-- Card 2 -->
-                <div onclick="openModuleModal('js')" class="glass-card p-6 rounded-xl flex flex-col items-center justify-center gap-4 group cursor-pointer" data-cursor="hover">
+                <div onclick="openModuleModal('js')" class="glass-card p-6 rounded-xl flex flex-col items-center justify-center gap-4 group cursor-pointer hover:-translate-y-2 transition-all">
                     <i data-lucide="file-json-2" class="w-12 h-12 text-yellow-400 group-hover:scale-110 transition-transform"></i>
                     <h4 class="font-bold font-cyber text-gray-900 dark:text-white text-center">JavaScript</h4>
                     <p class="text-xs text-gray-500 text-center">Logika & Interaktivitas</p>
                 </div>
-                <!-- Card 3 -->
-                <div onclick="openModuleModal('db')" class="glass-card p-6 rounded-xl flex flex-col items-center justify-center gap-4 group cursor-pointer" data-cursor="hover">
+                <div onclick="openModuleModal('db')" class="glass-card p-6 rounded-xl flex flex-col items-center justify-center gap-4 group cursor-pointer hover:-translate-y-2 transition-all">
                     <i data-lucide="database" class="w-12 h-12 text-blue-500 group-hover:scale-110 transition-transform"></i>
                     <h4 class="font-bold font-cyber text-gray-900 dark:text-white text-center">Database</h4>
                     <p class="text-xs text-gray-500 text-center">MySQL & Pengolahan Data</p>
                 </div>
-                <!-- Card 4 -->
-                <div onclick="openModuleModal('php')" class="glass-card p-6 rounded-xl flex flex-col items-center justify-center gap-4 group cursor-pointer" data-cursor="hover">
+                <div onclick="openModuleModal('php')" class="glass-card p-6 rounded-xl flex flex-col items-center justify-center gap-4 group cursor-pointer hover:-translate-y-2 transition-all">
                     <i data-lucide="server" class="w-12 h-12 text-purple-500 group-hover:scale-110 transition-transform"></i>
                     <h4 class="font-bold font-cyber text-gray-900 dark:text-white text-center">PHP / Backend</h4>
                     <p class="text-xs text-gray-500 text-center">Server Side Programming</p>
                 </div>
-                <!-- Card 5 -->
-                <div onclick="openModuleModal('uiux')" class="glass-card p-6 rounded-xl flex flex-col items-center justify-center gap-4 group cursor-pointer" data-cursor="hover">
+                <div onclick="openModuleModal('uiux')" class="glass-card p-6 rounded-xl flex flex-col items-center justify-center gap-4 group cursor-pointer hover:-translate-y-2 transition-all">
                     <i data-lucide="pen-tool" class="w-12 h-12 text-pink-500 group-hover:scale-110 transition-transform"></i>
                     <h4 class="font-bold font-cyber text-gray-900 dark:text-white text-center">UI / UX</h4>
                     <p class="text-xs text-gray-500 text-center">Figma & User Experience</p>
                 </div>
-                <!-- Card 6 -->
-                <div onclick="openModuleModal('gamedev')" class="glass-card p-6 rounded-xl flex flex-col items-center justify-center gap-4 group cursor-pointer" data-cursor="hover">
+                <div onclick="openModuleModal('gamedev')" class="glass-card p-6 rounded-xl flex flex-col items-center justify-center gap-4 group cursor-pointer hover:-translate-y-2 transition-all">
                     <i data-lucide="gamepad-2" class="w-12 h-12 text-cyber-green group-hover:scale-110 transition-transform"></i>
                     <h4 class="font-bold font-cyber text-gray-900 dark:text-white text-center">Game Dev</h4>
                     <p class="text-xs text-gray-500 text-center">Unity & C# / 2D & 3D Game</p>
                 </div>
-                <!-- Card 7 -->
-                <div onclick="openModuleModal('python')" class="glass-card p-6 rounded-xl flex flex-col items-center justify-center gap-4 group cursor-pointer" data-cursor="hover">
+                <div onclick="openModuleModal('python')" class="glass-card p-6 rounded-xl flex flex-col items-center justify-center gap-4 group cursor-pointer hover:-translate-y-2 transition-all">
                     <i data-lucide="terminal" class="w-12 h-12 text-green-400 group-hover:scale-110 transition-transform"></i>
                     <h4 class="font-bold font-cyber text-gray-900 dark:text-white text-center">Python & AI</h4>
                     <p class="text-xs text-gray-500 text-center">Algoritma & Basic AI</p>
                 </div>
-                <!-- Card 8 -->
-                <div onclick="openModuleModal('git')" class="glass-card p-6 rounded-xl flex flex-col items-center justify-center gap-4 group cursor-pointer" data-cursor="hover">
+                <div onclick="openModuleModal('git')" class="glass-card p-6 rounded-xl flex flex-col items-center justify-center gap-4 group cursor-pointer hover:-translate-y-2 transition-all">
                     <i data-lucide="github" class="w-12 h-12 text-gray-800 dark:text-white group-hover:scale-110 transition-transform"></i>
                     <h4 class="font-bold font-cyber text-gray-900 dark:text-white text-center">Git & GitHub</h4>
                     <p class="text-xs text-gray-500 text-center">Version Control System</p>
@@ -488,45 +456,34 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 reveal">
-                <!-- Job 1 -->
                 <div class="glass-card p-8 rounded-2xl relative overflow-hidden group">
                     <div class="absolute top-0 right-0 w-32 h-32 bg-cyber-blue/10 rounded-full blur-3xl group-hover:bg-cyber-blue/30 transition-all"></div>
                     <i data-lucide="monitor" class="w-10 h-10 text-cyber-blue mb-6"></i>
                     <h4 class="text-xl font-bold font-cyber text-gray-900 dark:text-white mb-3">Frontend Developer</h4>
                     <p class="text-gray-600 dark:text-gray-400 text-sm">Spesialis pembuat tampilan website yang interaktif, responsif, dan memanjakan mata pengguna.</p>
                 </div>
-                
-                <!-- Job 2 -->
                 <div class="glass-card p-8 rounded-2xl relative overflow-hidden group">
                     <div class="absolute top-0 right-0 w-32 h-32 bg-cyber-green/10 rounded-full blur-3xl group-hover:bg-cyber-green/30 transition-all"></div>
                     <i data-lucide="server-cog" class="w-10 h-10 text-cyber-green mb-6"></i>
                     <h4 class="text-xl font-bold font-cyber text-gray-900 dark:text-white mb-3">Backend Developer</h4>
                     <p class="text-gray-600 dark:text-gray-400 text-sm">Arsitek sistem di balik layar. Mengatur database, server, keamanan, dan logika aplikasi.</p>
                 </div>
-
-                <!-- Job 3 -->
                 <div class="glass-card p-8 rounded-2xl relative overflow-hidden group border-cyber-blue/50">
                     <div class="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 rounded-full blur-3xl group-hover:bg-purple-500/30 transition-all"></div>
                     <i data-lucide="layers" class="w-10 h-10 text-purple-500 mb-6"></i>
                     <h4 class="text-xl font-bold font-cyber text-gray-900 dark:text-white mb-3">Fullstack Developer</h4>
                     <p class="text-gray-600 dark:text-gray-400 text-sm">Menguasai Frontend sekaligus Backend. "One-man army" yang sangat diincar startup & corporate.</p>
                 </div>
-
-                <!-- Job 4 -->
                 <div class="glass-card p-8 rounded-2xl relative overflow-hidden group">
                     <i data-lucide="ghost" class="w-10 h-10 text-orange-500 mb-6"></i>
                     <h4 class="text-xl font-bold font-cyber text-gray-900 dark:text-white mb-3">Game Developer</h4>
                     <p class="text-gray-600 dark:text-gray-400 text-sm">Merancang alur cerita, karakter, dan memprogram game untuk PC, Console, maupun Mobile.</p>
                 </div>
-
-                <!-- Job 5 -->
                 <div class="glass-card p-8 rounded-2xl relative overflow-hidden group">
                     <i data-lucide="smartphone" class="w-10 h-10 text-pink-500 mb-6"></i>
                     <h4 class="text-xl font-bold font-cyber text-gray-900 dark:text-white mb-3">Mobile Developer</h4>
                     <p class="text-gray-600 dark:text-gray-400 text-sm">Membuat aplikasi canggih untuk Android dan iOS menggunakan teknologi modern seperti Flutter/React Native.</p>
                 </div>
-
-                <!-- Job 6 -->
                 <div class="glass-card p-8 rounded-2xl relative overflow-hidden group">
                     <i data-lucide="shield-alert" class="w-10 h-10 text-red-500 mb-6"></i>
                     <h4 class="text-xl font-bold font-cyber text-gray-900 dark:text-white mb-3">Cyber Security</h4>
@@ -538,9 +495,7 @@
 
     <!-- ================= KENAPA PPLG ================= -->
     <section class="py-20 bg-cyber-green text-cyber-black overflow-hidden relative">
-        <!-- Background Pattern -->
         <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(#000 1px, transparent 1px); background-size: 20px 20px;"></div>
-        
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 reveal">
             <div class="flex flex-col md:flex-row items-center justify-between gap-12">
                 <div class="w-full md:w-1/2">
@@ -550,7 +505,7 @@
                     <p class="text-lg font-medium mb-8 max-w-md">
                         Dunia bergerak ke arah digital. Mereka yang menguasai kode adalah mereka yang akan memimpin masa depan.
                     </p>
-                    <a href="#timeline" data-cursor="hover" class="inline-flex items-center gap-2 bg-cyber-black text-cyber-green font-cyber font-bold px-6 py-3 hover:bg-white hover:text-black transition-colors">
+                    <a href="#timeline" class="inline-flex items-center gap-2 bg-cyber-black text-cyber-green font-cyber font-bold px-6 py-3 hover:bg-white hover:text-black transition-colors">
                         LIHAT ROADMAP <i data-lucide="arrow-right"></i>
                     </a>
                 </div>
@@ -590,8 +545,6 @@
             </div>
 
             <div class="relative timeline-container">
-                
-                <!-- Class 10 -->
                 <div class="mb-12 flex justify-between items-center w-full relative z-10 md:flex-row flex-col">
                     <div class="order-1 md:w-5/12 w-full md:text-right text-left pl-12 md:pl-0 md:pr-8 mb-4 md:mb-0">
                         <h4 class="font-cyber text-2xl font-bold text-cyber-blue">KELAS 10</h4>
@@ -603,8 +556,6 @@
                     </div>
                     <div class="order-1 md:w-5/12 w-full"></div>
                 </div>
-
-                <!-- Class 11 -->
                 <div class="mb-12 flex justify-between items-center w-full relative z-10 md:flex-row-reverse flex-col">
                     <div class="order-1 md:w-5/12 w-full text-left pl-12 md:pl-8 mb-4 md:mb-0">
                         <h4 class="font-cyber text-2xl font-bold text-cyber-green">KELAS 11</h4>
@@ -616,8 +567,6 @@
                     </div>
                     <div class="order-1 md:w-5/12 w-full"></div>
                 </div>
-
-                <!-- Class 12 -->
                 <div class="mb-12 flex justify-between items-center w-full relative z-10 md:flex-row flex-col">
                     <div class="order-1 md:w-5/12 w-full md:text-right text-left pl-12 md:pl-0 md:pr-8 mb-4 md:mb-0">
                         <h4 class="font-cyber text-2xl font-bold text-purple-500">KELAS 12</h4>
@@ -629,7 +578,6 @@
                     </div>
                     <div class="order-1 md:w-5/12 w-full"></div>
                 </div>
-
             </div>
         </div>
     </section>
@@ -643,8 +591,7 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- Gallery Item -->
-                <div class="group relative overflow-hidden rounded-xl border border-gray-700 aspect-video glass-card cursor-pointer" data-cursor="hover">
+                <div class="group relative overflow-hidden rounded-xl border border-gray-700 aspect-video glass-card cursor-pointer">
                     <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Coding" class="object-cover w-full h-full group-hover:scale-110 transition-transform duration-500">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-6 opacity-0 group-hover:opacity-100 transition-opacity">
                         <div>
@@ -653,9 +600,8 @@
                         </div>
                     </div>
                 </div>
-                <!-- Gallery Item -->
-                <div class="group relative overflow-hidden rounded-xl border border-gray-700 aspect-video glass-card cursor-pointer" data-cursor="hover">
-                    <img src="GameDev.jpg" alt="Game Dev" class="object-cover w-full h-full group-hover:scale-110 transition-transform duration-500">
+                <div class="group relative overflow-hidden rounded-xl border border-gray-700 aspect-video glass-card cursor-pointer">
+                    <img src="https://images.unsplash.com/photo-1555680202-c86f0e12f086?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Game Dev" class="object-cover w-full h-full group-hover:scale-110 transition-transform duration-500">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-6 opacity-0 group-hover:opacity-100 transition-opacity">
                         <div>
                             <h4 class="font-cyber font-bold text-white text-lg">Game Development</h4>
@@ -663,8 +609,7 @@
                         </div>
                     </div>
                 </div>
-                <!-- Gallery Item -->
-                <div class="group relative overflow-hidden rounded-xl border border-gray-700 aspect-video glass-card cursor-pointer" data-cursor="hover">
+                <div class="group relative overflow-hidden rounded-xl border border-gray-700 aspect-video glass-card cursor-pointer">
                     <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Teamwork" class="object-cover w-full h-full group-hover:scale-110 transition-transform duration-500">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-6 opacity-0 group-hover:opacity-100 transition-opacity">
                         <div>
@@ -697,7 +642,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="glass-card p-6 rounded-2xl relative border-t-4 border-t-cyber-green">
                     <i data-lucide="quote" class="absolute top-6 right-6 text-gray-600 dark:text-gray-700 w-10 h-10 opacity-50"></i>
                     <p class="text-gray-700 dark:text-gray-300 mb-6 relative z-10 italic">"Gurunya asik, materinya update. Belajar bikin game dari nol sampai bisa di-publish di Play Store. Seru banget!"</p>
@@ -709,7 +653,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="glass-card p-6 rounded-2xl relative border-t-4 border-t-purple-500">
                     <i data-lucide="quote" class="absolute top-6 right-6 text-gray-600 dark:text-gray-700 w-10 h-10 opacity-50"></i>
                     <p class="text-gray-700 dark:text-gray-300 mb-6 relative z-10 italic">"Awalnya gaptek, tapi karena praktek terus tiap hari jadi terbiasa."</p>
@@ -734,9 +677,8 @@
             </div>
 
             <div class="space-y-4">
-                <!-- Accordion 1 -->
                 <div class="glass-card rounded-xl overflow-hidden">
-                    <button class="accordion-btn w-full px-6 py-4 flex justify-between items-center text-left focus:outline-none" data-cursor="hover">
+                    <button class="accordion-btn w-full px-6 py-4 flex justify-between items-center text-left focus:outline-none">
                         <span class="font-bold text-gray-900 dark:text-white">Apakah harus pintar matematika untuk masuk PPLG?</span>
                         <i data-lucide="chevron-down" class="text-cyber-blue transition-transform duration-300"></i>
                     </button>
@@ -744,9 +686,8 @@
                         <p class="px-6 pb-4 text-gray-600 dark:text-gray-300 text-sm">Tidak wajib jago matematika tingkat dewa. Yang lebih ditekankan adalah logika dan kemampuan problem solving. Matematika dasar sudah cukup sebagai awalan.</p>
                     </div>
                 </div>
-                <!-- Accordion 2 -->
                 <div class="glass-card rounded-xl overflow-hidden">
-                    <button class="accordion-btn w-full px-6 py-4 flex justify-between items-center text-left focus:outline-none" data-cursor="hover">
+                    <button class="accordion-btn w-full px-6 py-4 flex justify-between items-center text-left focus:outline-none">
                         <span class="font-bold text-gray-900 dark:text-white">Apakah harus punya laptop gaming yang mahal?</span>
                         <i data-lucide="chevron-down" class="text-cyber-blue transition-transform duration-300"></i>
                     </button>
@@ -754,9 +695,8 @@
                         <p class="px-6 pb-4 text-gray-600 dark:text-gray-300 text-sm">Tidak harus! Untuk coding web dasar, laptop standar sudah sangat cukup. Sekolah juga memfasilitasi Lab Komputer spesifikasi tinggi untuk praktik berat seperti Game Development.</p>
                     </div>
                 </div>
-                <!-- Accordion 3 -->
                 <div class="glass-card rounded-xl overflow-hidden">
-                    <button class="accordion-btn w-full px-6 py-4 flex justify-between items-center text-left focus:outline-none" data-cursor="hover">
+                    <button class="accordion-btn w-full px-6 py-4 flex justify-between items-center text-left focus:outline-none">
                         <span class="font-bold text-gray-900 dark:text-white">PPLG sama dengan RPL?</span>
                         <i data-lucide="chevron-down" class="text-cyber-blue transition-transform duration-300"></i>
                     </button>
@@ -768,9 +708,59 @@
         </div>
     </section>
 
+    <!-- ================= QUIZ SECTION ================= -->
+    <section id="quiz-section" class="py-24 relative overflow-hidden">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 reveal">
+            <div class="text-center mb-12">
+                <h2 class="font-cyber text-sm font-bold text-cyber-blue tracking-widest uppercase mb-2">Test Skill Kamu</h2>
+                <h3 class="text-3xl md:text-4xl font-bold font-cyber text-gray-900 dark:text-white">Kuis Wawasan <span class="text-gradient">PPLG</span></h3>
+            </div>
+
+            <!-- Quiz Container -->
+            <div class="glass-card rounded-2xl p-6 md:p-10 relative overflow-hidden border-t-4 border-t-cyber-green shadow-[0_0_40px_rgba(118,185,0,0.1)] min-h-[400px] flex flex-col justify-center">
+                
+                <!-- Layar Kuis Berjalan -->
+                <div id="quiz-active-area" class="w-full">
+                    <div class="flex justify-between items-center mb-8 border-b border-gray-300 dark:border-gray-700 pb-4">
+                        <span id="quiz-progress-text" class="text-sm font-cyber font-bold text-cyber-blue">Pertanyaan 1 dari 5</span>
+                        <span class="text-sm font-cyber text-gray-600 dark:text-gray-400">Score: <span id="quiz-score-display" class="text-cyber-green font-bold text-lg">0</span></span>
+                    </div>
+                    
+                    <h4 id="quiz-question" class="text-xl md:text-2xl font-bold font-cyber text-gray-900 dark:text-white mb-6 leading-relaxed">
+                        Pertanyaan akan muncul di sini?
+                    </h4>
+                    
+                    <!-- Pilihan Jawaban -->
+                    <div id="quiz-options-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Options will be generated by JS -->
+                    </div>
+
+                    <!-- Tombol Lanjut (Hidden by default) -->
+                    <div class="mt-8 flex justify-end">
+                        <button id="quiz-next-btn" onclick="nextQuestion()" class="hidden px-6 py-3 bg-cyber-green text-black font-cyber font-bold uppercase tracking-widest text-sm hover:bg-white hover:text-black transition-colors rounded shadow-[0_0_15px_rgba(118,185,0,0.4)]">
+                            Selanjutnya <i data-lucide="arrow-right" class="inline w-4 h-4 ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Layar Hasil Akhir (Hidden by default) -->
+                <div id="quiz-result-area" class="hidden w-full text-center py-8">
+                    <i data-lucide="award" class="w-20 h-20 mx-auto text-cyber-green mb-6 animate-pulse"></i>
+                    <h4 class="text-3xl font-bold font-cyber text-gray-900 dark:text-white mb-2">Kuis Selesai!</h4>
+                    <p class="text-gray-600 dark:text-gray-400 mb-6">Skor Akhir Kamu:</p>
+                    <div class="text-6xl font-black font-cyber text-gradient mb-8 glow-text-green" id="quiz-final-score">100</div>
+                    <p id="quiz-feedback-msg" class="text-lg text-gray-800 dark:text-gray-200 mb-8 font-medium"></p>
+                    
+                    <button onclick="restartQuiz()" class="px-8 py-3 border-2 border-cyber-blue text-gray-900 dark:text-white hover:bg-cyber-blue hover:text-black transition-all font-cyber font-bold tracking-widest rounded shadow-[0_0_15px_rgba(0,243,255,0.2)]">
+                        <i data-lucide="refresh-cw" class="inline w-4 h-4 mr-2"></i> COBA LAGI
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- ================= FOOTER ================= -->
     <footer class="bg-gray-200 dark:bg-cyber-black border-t border-gray-300 dark:border-gray-800 pt-16 pb-8 relative overflow-hidden">
-        <!-- Glow top -->
         <div class="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-1 bg-gradient-to-r from-transparent via-cyber-blue to-transparent glow-blue"></div>
         
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -784,9 +774,9 @@
                         Mencetak generasi developer unggul, kreatif, dan inovatif siap menghadapi tantangan teknologi di masa depan.
                     </p>
                     <div class="flex gap-4">
-                        <a href="#" class="w-10 h-10 rounded-full border border-gray-400 dark:border-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-400 hover:border-cyber-blue hover:text-cyber-blue transition-colors" data-cursor="hover"><i data-lucide="instagram" class="w-5 h-5"></i></a>
-                        <a href="#" class="w-10 h-10 rounded-full border border-gray-400 dark:border-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-400 hover:border-cyber-blue hover:text-cyber-blue transition-colors" data-cursor="hover"><i data-lucide="github" class="w-5 h-5"></i></a>
-                        <a href="#" class="w-10 h-10 rounded-full border border-gray-400 dark:border-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-400 hover:border-cyber-blue hover:text-cyber-blue transition-colors" data-cursor="hover"><i data-lucide="youtube" class="w-5 h-5"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full border border-gray-400 dark:border-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-400 hover:border-cyber-blue hover:text-cyber-blue transition-colors"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full border border-gray-400 dark:border-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-400 hover:border-cyber-blue hover:text-cyber-blue transition-colors"><i data-lucide="github" class="w-5 h-5"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full border border-gray-400 dark:border-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-400 hover:border-cyber-blue hover:text-cyber-blue transition-colors"><i data-lucide="youtube" class="w-5 h-5"></i></a>
                     </div>
                 </div>
                 
@@ -796,7 +786,7 @@
                         <li><a href="#about" class="hover:text-cyber-green transition-colors">Tentang PPLG</a></li>
                         <li><a href="#materi" class="hover:text-cyber-green transition-colors">Materi Belajar</a></li>
                         <li><a href="#prospek" class="hover:text-cyber-green transition-colors">Prospek Kerja</a></li>
-                        <li><a href="#timeline" class="hover:text-cyber-green transition-colors">Roadmap</a></li>
+                        <li><a href="#quiz-section" class="hover:text-cyber-green transition-colors">Kuis Wawasan</a></li>
                     </ul>
                 </div>
 
@@ -805,7 +795,7 @@
                     <ul class="space-y-3 text-sm text-gray-600 dark:text-gray-400">
                         <li class="flex items-start gap-3">
                             <i data-lucide="map-pin" class="w-5 h-5 text-cyber-blue shrink-0"></i>
-                            <span>Jalan L.U. Adi Sucipto No. 38, Kelurahan Kerten, Kecamatan Laweyan, Kota Surakarta, Jawa Tengah, Kode Pos: 57143</span>
+                            <span>Jalan L.U. Adi Sucipto No. 38, Kelurahan Kerten, Kota Surakarta, Kode Pos: 57143</span>
                         </li>
                         <li class="flex items-center gap-3">
                             <i data-lucide="phone" class="w-5 h-5 text-cyber-blue shrink-0"></i>
@@ -820,9 +810,9 @@
             </div>
             
             <div class="border-t border-gray-300 dark:border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500">
-                <p>&copy; 2026  Kingagfox. All rights reserved.</p>
+                <p>&copy; 2026 Kingagfox. All rights reserved.</p>
                 <div class="flex items-center gap-4">
-                    <button onclick="rebootSystem()" class="flex items-center gap-2 hover:text-cyber-green transition-colors font-cyber group" data-cursor="hover">
+                    <button onclick="rebootSystem()" class="flex items-center gap-2 hover:text-cyber-green transition-colors font-cyber group">
                         <i data-lucide="power" class="w-4 h-4 group-hover:text-cyber-green"></i> <span class="tracking-widest">REBOOT_SYS</span>
                     </button>
                     <span class="hidden md:inline">|</span>
@@ -834,10 +824,9 @@
 
     <!-- ================= JAVASCRIPT ================= -->
     <script>
-        // Initialize Lucide Icons
         lucide.createIcons();
 
-        // 1. System Boot & Restart Logic
+        // 1. System Boot
         const bootMessages = [
             "Mounting PPLG Core...",
             "Loading Modules [HTML, CSS, JS]...",
@@ -852,7 +841,7 @@
             container.innerHTML = '';
             let delay = 0;
             
-            bootMessages.forEach((msg, index) => {
+            bootMessages.forEach((msg) => {
                 setTimeout(() => {
                     const line = document.createElement('div');
                     line.innerHTML = `> <span class="text-gray-300">${msg}</span> <span class="text-cyber-blue ml-1">[OK]</span>`;
@@ -871,12 +860,13 @@
             loader.style.opacity = '0';
             setTimeout(() => {
                 loader.style.display = 'none';
-                initRevealObserver(); // Mulai jalankan animasi scroll
+                initRevealObserver();
             }, 500);
         }
 
         window.addEventListener('load', () => {
             runBootSequence(hideLoader);
+            loadQuizQuestion(); // Inisialisasi kuis
         });
 
         window.rebootSystem = function() {
@@ -894,7 +884,7 @@
             lucide.createIcons();
         };
 
-        // 2. Theme Toggle (Dark/Light)
+        // 2. Theme Toggle
         const htmlElement = document.documentElement;
         const themeToggles = [document.getElementById('theme-toggle'), document.getElementById('theme-toggle-mobile')];
         const themeIcons = [document.getElementById('theme-icon'), document.getElementById('theme-icon-mobile')];
@@ -908,7 +898,7 @@
             lucide.createIcons();
         }
 
-        themeToggles.forEach((btn, index) => {
+        themeToggles.forEach((btn) => {
             btn?.addEventListener('click', () => {
                 htmlElement.classList.toggle('dark');
                 let isDark = htmlElement.classList.contains('dark');
@@ -931,7 +921,7 @@
             });
         });
 
-        // 3. Mobile Menu Toggle
+        // 3. Mobile Menu
         const mobileMenuBtn = document.getElementById('mobile-menu-btn');
         const mobileMenu = document.getElementById('mobile-menu');
         
@@ -945,7 +935,7 @@
             });
         });
 
-        // 4. Navbar Active & Glassmorphism on Scroll
+        // 4. Navbar Active on Scroll
         const navbar = document.getElementById('navbar');
         window.addEventListener('scroll', () => {
             window.requestAnimationFrame(() => {
@@ -962,11 +952,7 @@
         // 5. Scroll Reveal Animation
         function initRevealObserver() {
             const reveals = document.querySelectorAll(".reveal");
-            const observerOptions = {
-                root: null,
-                rootMargin: '0px 0px -50px 0px', 
-                threshold: 0.1
-            };
+            const observerOptions = { root: null, rootMargin: '0px 0px -50px 0px', threshold: 0.1 };
 
             const revealObserver = new IntersectionObserver(function(entries, observer) {
                 entries.forEach(entry => {
@@ -977,17 +963,12 @@
                 });
             }, observerOptions);
 
-            reveals.forEach(reveal => {
-                revealObserver.observe(reveal);
-            });
+            reveals.forEach(reveal => revealObserver.observe(reveal));
         }
 
         // 6. Typing Animation
         const typedTextSpan = document.getElementById("typing-text");
         const textArray = ["Programmer.", "Game Developer.", "UI/UX Designer.", "AI Engineer."];
-        const typingDelay = 100;
-        const erasingDelay = 50;
-        const newTextDelay = 2000; 
         let textArrayIndex = 0;
         let charIndex = 0;
 
@@ -995,10 +976,9 @@
             if (charIndex < textArray[textArrayIndex].length) {
                 typedTextSpan.textContent += textArray[textArrayIndex].charAt(charIndex);
                 charIndex++;
-                setTimeout(type, typingDelay);
-            } 
-            else {
-                setTimeout(erase, newTextDelay);
+                setTimeout(type, 100);
+            } else {
+                setTimeout(erase, 2000);
             }
         }
 
@@ -1006,18 +986,15 @@
             if (charIndex > 0) {
                 typedTextSpan.textContent = textArray[textArrayIndex].substring(0, charIndex-1);
                 charIndex--;
-                setTimeout(erase, erasingDelay);
-            } 
-            else {
+                setTimeout(erase, 50);
+            } else {
                 textArrayIndex++;
                 if(textArrayIndex >= textArray.length) textArrayIndex = 0;
-                setTimeout(type, typingDelay + 1100);
+                setTimeout(type, 1100);
             }
         }
         
-        setTimeout(() => {
-            if(textArray.length) setTimeout(type, newTextDelay + 250);
-        }, 1500);
+        setTimeout(() => { if(textArray.length) setTimeout(type, 2250); }, 1500);
 
         // 7. FAQ Accordion
         const accordions = document.querySelectorAll('.accordion-btn');
@@ -1034,9 +1011,7 @@
                     accordions.forEach(otherAcc => {
                         if(otherAcc !== this) {
                             otherAcc.classList.remove('active');
-                            if (otherAcc.nextElementSibling) {
-                                otherAcc.nextElementSibling.style.maxHeight = null;
-                            }
+                            if (otherAcc.nextElementSibling) otherAcc.nextElementSibling.style.maxHeight = null;
                             const otherIcon = otherAcc.querySelector('svg') || otherAcc.querySelector('i');
                             if (otherIcon) otherIcon.style.transform = 'rotate(0deg)';
                         }
@@ -1047,114 +1022,46 @@
             });
         });
 
-        // ================= FITUR BARU: MODAL MATERI =================
+        // 8. Modal Materi
         const modulesData = {
-            'html': {
-                title: 'HTML & CSS',
-                subtitle: 'Struktur & Desain Web',
-                icon: 'file-code-2',
-                iconColor: 'text-orange-500',
-                desc: 'Membangun pondasi sebuah website. HTML adalah kerangka strukturnya, sedangkan CSS adalah gaya dan bajunya. Di modul ini, kamu akan diajarkan membuat tampilan web yang menarik, modern, dan pastinya responsif untuk dibuka di HP maupun Laptop.',
-                list: ['Memahami tag HTML Semantik (HTML5)', 'Styling dengan CSS murni & Flexbox/Grid', 'Membuat website responsif (Mobile First)', 'Animasi CSS tingkat dasar & lanjut', 'Pengenalan Framework Modern (Tailwind CSS)']
-            },
-            'js': {
-                title: 'JavaScript',
-                subtitle: 'Logika & Interaktivitas',
-                icon: 'file-json-2',
-                iconColor: 'text-yellow-400',
-                desc: 'Website yang statis terasa membosankan. JavaScript adalah bahasa ajaib yang memberikan "nyawa" pada website kamu! Kamu akan belajar membuat elemen yang bisa diklik, form validasi, hingga mengambil data dari server luar secara langsung.',
-                list: ['Dasar variabel, fungsi, & logika (If/Else, Looping)', 'DOM Manipulation (Mengubah HTML via kode)', 'Event Listener (Klik, Scroll, Hover)', 'Asynchronous JS (Fetch API / AJAX)', 'Pengenalan React.js / Vue.js']
-            },
-            'db': {
-                title: 'Database',
-                subtitle: 'MySQL & Pengolahan Data',
-                icon: 'database',
-                iconColor: 'text-blue-500',
-                desc: 'Data adalah aset paling berharga di era digital. Di modul ini, kamu akan mempelajari cara merancang dan membuat tempat penyimpanan data (basis data) yang aman dan rapi untuk mendukung aplikasi yang kamu buat.',
-                list: ['Konsep Relational Database (RDBMS)', 'Perintah Dasar SQL (CRUD: Create, Read, Update, Delete)', 'Relasi antar tabel (Join)', 'Keamanan Data & Enkripsi', 'Export/Import Database']
-            },
-            'php': {
-                title: 'PHP / Backend',
-                subtitle: 'Server Side Programming',
-                icon: 'server',
-                iconColor: 'text-purple-500',
-                desc: 'Bagaimana sistem pendaftaran akun, login, dan dashboard bekerja di balik layar? Modul Backend ini akan mengajarkanmu cara membuat server-side logic menggunakan PHP dan menyambungkannya dengan Database.',
-                list: ['Sintaks Dasar PHP & Pemrosesan Form', 'Session & Cookies (Sistem Login)', 'Koneksi PHP ke MySQL', 'Membuat API untuk aplikasi mobile', 'Pengenalan Framework Laravel']
-            },
-            'uiux': {
-                title: 'UI / UX Design',
-                subtitle: 'Figma & User Experience',
-                icon: 'pen-tool',
-                iconColor: 'text-pink-500',
-                desc: 'Sebuah aplikasi tidak hanya dituntut untuk berfungsi, tapi juga harus nyaman digunakan. Di modul ini, sebelum mulai coding, kita akan merancang prototipe tampilannya terlebih dahulu menggunakan tools desain standar industri.',
-                list: ['Prinsip Dasar Desain & Warna', 'User Experience (Riset & Alur Pengguna)', 'Membuat Wireframe & Mockup', 'Prototyping menggunakan Figma', 'Hand-off desain ke developer']
-            },
-            'gamedev': {
-                title: 'Game Development',
-                subtitle: 'Unity & C# / 2D & 3D Game',
-                icon: 'gamepad-2',
-                iconColor: 'text-cyber-green',
-                desc: 'Wujudkan imajinasimu menjadi sebuah Video Game! Ini adalah bagian paling seru di jurusan PPLG. Kamu akan diajarkan cara membuat game dari nol, mengatur fisika karakter, hingga mempublikasikannya agar bisa dimainkan orang lain.',
-                list: ['Pengenalan Game Engine (Unity / Godot)', 'Logika & Fisika dalam Game (Gravitasi, Tabrakan)', 'Pemrograman C# untuk Game', 'Desain Level & Animasi Karakter', 'Build game ke PC / Android']
-            },
-            'python': {
-                title: 'Python & AI',
-                subtitle: 'Algoritma & Basic AI',
-                icon: 'terminal',
-                iconColor: 'text-green-400',
-                desc: 'Bahasa pemrograman yang paling dicari di era Kecerdasan Buatan (AI). Python sangat mudah dipelajari namun sangat kuat fungsinya. Kamu akan belajar mengolah data, membuat bot cerdas, hingga pengenalan Machine Learning.',
-                list: ['Dasar Sintaks Python (Sangat Ramah Pemula)', 'Struktur Data (List, Dictionary, dll)', 'Pembuatan Bot Telegram / Discord', 'Web Scraping (Mengambil data otomatis dari web)', 'Pengenalan Logika AI & Machine Learning Dasar']
-            },
-            'git': {
-                title: 'Git & GitHub',
-                subtitle: 'Version Control System',
-                icon: 'github',
-                iconColor: 'text-gray-800 dark:text-white',
-                desc: 'Programmer profesional tidak pernah bekerja sendiri dan tidak menyalin file manual pakai Flashdisk! Git digunakan untuk merekam setiap perubahan kodemu, dan GitHub adalah wadah kolaborasinya.',
-                list: ['Konsep Version Control System', 'Perintah Dasar Git (Commit, Push, Pull)', 'Manajemen Branch (Cabang Kode)', 'Kolaborasi Tim (Merge & Resolve Conflict)', 'Membangun Portofolio di GitHub']
-            }
+            'html': { title: 'HTML & CSS', subtitle: 'Struktur & Desain Web', icon: 'file-code-2', iconColor: 'text-orange-500', desc: 'Membangun pondasi sebuah website. HTML adalah kerangka strukturnya, sedangkan CSS adalah gaya dan bajunya.', list: ['Memahami tag HTML Semantik (HTML5)', 'Styling dengan CSS murni & Flexbox/Grid', 'Membuat website responsif (Mobile First)', 'Pengenalan Framework Modern (Tailwind CSS)'] },
+            'js': { title: 'JavaScript', subtitle: 'Logika & Interaktivitas', icon: 'file-json-2', iconColor: 'text-yellow-400', desc: 'JavaScript adalah bahasa ajaib yang memberikan "nyawa" pada website kamu! Kamu akan belajar membuat elemen yang interaktif.', list: ['Dasar variabel, fungsi, & logika', 'DOM Manipulation (Mengubah HTML via kode)', 'Event Listener (Klik, Scroll, Hover)', 'Pengenalan React.js / Vue.js'] },
+            'db': { title: 'Database', subtitle: 'MySQL & Pengolahan Data', icon: 'database', iconColor: 'text-blue-500', desc: 'Di modul ini, kamu akan mempelajari cara merancang dan membuat tempat penyimpanan data (basis data) yang aman dan rapi.', list: ['Konsep Relational Database (RDBMS)', 'Perintah Dasar SQL (CRUD)', 'Relasi antar tabel (Join)', 'Keamanan Data & Enkripsi'] },
+            'php': { title: 'PHP / Backend', subtitle: 'Server Side Programming', icon: 'server', iconColor: 'text-purple-500', desc: 'Modul Backend ini akan mengajarkanmu cara membuat server-side logic menggunakan PHP dan menyambungkannya dengan Database.', list: ['Sintaks Dasar PHP & Pemrosesan Form', 'Session & Cookies (Sistem Login)', 'Membuat API untuk aplikasi mobile', 'Pengenalan Framework Laravel'] },
+            'uiux': { title: 'UI / UX Design', subtitle: 'Figma & User Experience', icon: 'pen-tool', iconColor: 'text-pink-500', desc: 'Sebelum mulai coding, kita akan merancang prototipe tampilannya terlebih dahulu menggunakan tools desain standar industri.', list: ['Prinsip Dasar Desain & Warna', 'User Experience (Riset & Alur Pengguna)', 'Membuat Wireframe & Mockup', 'Prototyping menggunakan Figma'] },
+            'gamedev': { title: 'Game Development', subtitle: 'Unity & C# / 2D & 3D Game', icon: 'gamepad-2', iconColor: 'text-cyber-green', desc: 'Wujudkan imajinasimu menjadi sebuah Video Game! Kamu akan diajarkan cara membuat game dari nol.', list: ['Pengenalan Game Engine (Unity / Godot)', 'Logika & Fisika dalam Game', 'Pemrograman C# untuk Game', 'Build game ke PC / Android'] },
+            'python': { title: 'Python & AI', subtitle: 'Algoritma & Basic AI', icon: 'terminal', iconColor: 'text-green-400', desc: 'Bahasa pemrograman yang paling dicari di era AI. Kamu akan belajar mengolah data dan membuat bot cerdas.', list: ['Dasar Sintaks Python', 'Pembuatan Bot Telegram / Discord', 'Web Scraping', 'Pengenalan Machine Learning Dasar'] },
+            'git': { title: 'Git & GitHub', subtitle: 'Version Control System', icon: 'github', iconColor: 'text-gray-800 dark:text-white', desc: 'Git digunakan untuk merekam setiap perubahan kodemu, dan GitHub adalah wadah kolaborasinya.', list: ['Konsep Version Control System', 'Perintah Dasar Git (Commit, Push, Pull)', 'Kolaborasi Tim (Merge & Resolve Conflict)', 'Membangun Portofolio di GitHub'] }
         };
 
         function openModuleModal(moduleId) {
             const data = modulesData[moduleId];
             if (!data) return;
 
-            // Masukkan data ke dalam elemen HTML modal
             document.getElementById('modal-title').textContent = data.title;
             document.getElementById('modal-subtitle').textContent = data.subtitle;
             document.getElementById('modal-desc').textContent = data.desc;
-
-            // Masukkan Icon
-            const iconContainer = document.getElementById('modal-icon-container');
-            iconContainer.innerHTML = `<i data-lucide="${data.icon}" class="w-8 h-8 ${data.iconColor}"></i>`;
-
-            // Masukkan List yang akan dipelajari
-            const listContainer = document.getElementById('modal-list');
-            listContainer.innerHTML = data.list.map(item => `
+            document.getElementById('modal-icon-container').innerHTML = `<i data-lucide="${data.icon}" class="w-8 h-8 ${data.iconColor}"></i>`;
+            
+            document.getElementById('modal-list').innerHTML = data.list.map(item => `
                 <li class="flex items-start gap-3">
                     <i data-lucide="check" class="w-5 h-5 text-cyber-green shrink-0 mt-0.5"></i>
                     <span>${item}</span>
                 </li>
             `).join('');
 
-            // Panggil ulang Lucide Icon untuk mengubah tag <i> baru menjadi <svg>
             lucide.createIcons();
-
-            // Tampilkan Modal
+            
             const modal = document.getElementById('module-modal');
             const modalContent = document.getElementById('module-modal-content');
             
             modal.classList.remove('hidden');
             modal.classList.add('flex');
-            
-            // Sedikit delay agar transisi CSS berjalan (dari opacity 0 ke 1)
             setTimeout(() => {
                 modal.style.opacity = '1';
                 modalContent.classList.remove('scale-95');
                 modalContent.classList.add('scale-100');
             }, 10);
-            
-            // Kunci background agar tidak bisa di-scroll saat modal terbuka
             document.body.style.overflow = 'hidden'; 
         }
 
@@ -1162,24 +1069,19 @@
             const modal = document.getElementById('module-modal');
             const modalContent = document.getElementById('module-modal-content');
             
-            // Animasi menghilang (mengurangi opacity)
             modal.style.opacity = '0';
             modalContent.classList.remove('scale-100');
             modalContent.classList.add('scale-95');
             
-            // Sembunyikan elemen setelah animasi selesai (300ms)
             setTimeout(() => {
                 modal.classList.add('hidden');
                 modal.classList.remove('flex');
-                
-                // Kembalikan kemampuan scroll pada background
                 document.body.style.overflow = ''; 
             }, 300);
         }
 
-        // 8. Mouse Parallax Effect for Hero
-        document.addEventListener("mousemove", parallax);
-        function parallax(e) {
+        // 9. Mouse Parallax Effect for Hero
+        document.addEventListener("mousemove", (e) => {
             if(window.innerWidth < 768) return; 
             document.querySelectorAll("[data-parallax]").forEach(function(move){
                 var moving_value = move.getAttribute("data-parallax") === 'bg' ? -20 : 40;
@@ -1187,9 +1089,9 @@
                 var y = (e.clientY * moving_value) / 1000;
                 move.style.transform = "translateX(" + x + "px) translateY(" + y + "px)";
             });
-        }
+        });
 
-        // 9. Vanilla JS Particle Background
+        // 10. Vanilla JS Particle Background (Optimized)
         const canvas = document.getElementById("bg-canvas");
         const ctx = canvas.getContext("2d");
         let particlesArray;
@@ -1202,24 +1104,15 @@
 
         class Particle {
             constructor(x, y, directionX, directionY, size, color) {
-                this.x = x;
-                this.y = y;
-                this.directionX = directionX;
-                this.directionY = directionY;
-                this.size = size;
-                this.color = color;
+                this.x = x; this.y = y; this.directionX = directionX; this.directionY = directionY; this.size = size; this.color = color;
             }
             draw() {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
-                ctx.fillStyle = this.color;
-                ctx.fill();
+                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false); ctx.fillStyle = this.color; ctx.fill();
             }
             update() {
                 if (this.x > canvas.width || this.x < 0) this.directionX = -this.directionX;
                 if (this.y > canvas.height || this.y < 0) this.directionY = -this.directionY;
-                this.x += this.directionX;
-                this.y += this.directionY;
+                this.x += this.directionX; this.y += this.directionY;
                 this.draw();
             }
         }
@@ -1227,12 +1120,10 @@
         function initParticles() {
             resizeCanvas();
             particlesArray = [];
-            
             let isMobile = window.innerWidth < 768;
             let maxParticles = isMobile ? 35 : 100; 
             let density = isMobile ? 30000 : 15000; 
             let numberOfParticles = Math.min((canvas.height * canvas.width) / density, maxParticles);
-            
             let isDark = document.documentElement.classList.contains('dark');
             let colorArray = isDark ? ['#00f3ff', '#76b900', '#333333'] : ['#00f3ff', '#76b900', '#cccccc'];
 
@@ -1240,10 +1131,8 @@
                 let size = (Math.random() * 2) + 1;
                 let x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2);
                 let y = (Math.random() * ((innerHeight - size * 2) - (size * 2)) + size * 2);
-                let directionX = (Math.random() * 1) - 0.5;
-                let directionY = (Math.random() * 1) - 0.5;
+                let directionX = (Math.random() * 1) - 0.5; let directionY = (Math.random() * 1) - 0.5;
                 let color = colorArray[Math.floor(Math.random() * colorArray.length)];
-                
                 particlesArray.push(new Particle(x, y, directionX, directionY, size, color));
             }
         }
@@ -1261,11 +1150,7 @@
                     if (distance < (maxDistance * maxDistance)) {
                         opacityValue = 1 - (distance / (maxDistance * maxDistance));
                         ctx.strokeStyle = isDark ? `rgba(0, 243, 255, ${opacityValue * 0.2})` : `rgba(118, 185, 0, ${opacityValue * 0.2})`;
-                        ctx.lineWidth = 1;
-                        ctx.beginPath();
-                        ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
-                        ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
-                        ctx.stroke();
+                        ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(particlesArray[a].x, particlesArray[a].y); ctx.lineTo(particlesArray[b].x, particlesArray[b].y); ctx.stroke();
                     }
                 }
             }
@@ -1274,14 +1159,157 @@
         function animateParticles() {
             requestAnimationFrame(animateParticles);
             ctx.clearRect(0, 0, innerWidth, innerHeight);
-            for (let i = 0; i < particlesArray.length; i++) {
-                particlesArray[i].update();
-            }
+            for (let i = 0; i < particlesArray.length; i++) particlesArray[i].update();
             connectParticles();
         }
 
         initParticles();
         animateParticles();
+
+        // 11. QUIZ LOGIC
+        const quizData = [
+            {
+                question: "Bahasa pemrograman apa yang sering digunakan untuk memberi interaktivitas pada website?",
+                options: ["HTML", "CSS", "JavaScript", "Python"],
+                correct: 2
+            },
+            {
+                question: "Dalam mendesain UI/UX, software industri manakah yang paling sering dipelajari di PPLG?",
+                options: ["Microsoft Word", "Figma", "Corel Draw", "Notepad"],
+                correct: 1
+            },
+            {
+                question: "Apa fungsi utama dari CSS dalam pembuatan website?",
+                options: ["Mengelola database", "Mengatur gaya dan tampilan (styling)", "Membuat kerangka/struktur dasar", "Mengatur server backend"],
+                correct: 1
+            },
+            {
+                question: "Aplikasi apa yang umum digunakan untuk membangun Game 3D/2D Profesional?",
+                options: ["Godot / Unity", "Adobe Premiere", "Android Studio", "MySQL"],
+                correct: 0
+            },
+            {
+                question: "Platform apa yang digunakan oleh programmer untuk menyimpan kodingan dan berkolaborasi?",
+                options: ["Facebook", "Instagram", "GitHub", "Google Drive"],
+                correct: 2
+            }
+        ];
+
+        let currentQuiz = 0;
+        let quizScore = 0;
+        let answered = false;
+
+        const quizQuestionEl = document.getElementById("quiz-question");
+        const quizOptionsContainer = document.getElementById("quiz-options-container");
+        const quizNextBtn = document.getElementById("quiz-next-btn");
+        const quizProgressText = document.getElementById("quiz-progress-text");
+        const quizScoreDisplay = document.getElementById("quiz-score-display");
+
+        function loadQuizQuestion() {
+            answered = false;
+            quizNextBtn.classList.add("hidden");
+            
+            const currentData = quizData[currentQuiz];
+            quizQuestionEl.textContent = currentData.question;
+            quizProgressText.textContent = `Pertanyaan ${currentQuiz + 1} dari ${quizData.length}`;
+            
+            quizOptionsContainer.innerHTML = '';
+            
+            currentData.options.forEach((option, index) => {
+                const btn = document.createElement("button");
+                btn.className = "quiz-option w-full text-left p-4 rounded-xl border border-gray-300 dark:border-gray-700 bg-white/50 dark:bg-black/50 text-gray-800 dark:text-gray-200 hover:border-cyber-blue transition-all font-medium text-sm md:text-base";
+                btn.innerHTML = `<span class="font-cyber text-cyber-blue font-bold mr-2">${String.fromCharCode(65 + index)}.</span> ${option}`;
+                btn.onclick = () => selectQuizOption(index, btn);
+                quizOptionsContainer.appendChild(btn);
+            });
+        }
+
+        function selectQuizOption(selectedIndex, selectedBtn) {
+            if (answered) return;
+            answered = true;
+
+            const currentData = quizData[currentQuiz];
+            const allBtns = quizOptionsContainer.children;
+
+            // Kunci semua opsi
+            for(let i=0; i<allBtns.length; i++) {
+                allBtns[i].classList.add("disabled");
+                // Highlight yang benar
+                if(i === currentData.correct) {
+                    allBtns[i].classList.add("correct");
+                    allBtns[i].classList.remove("border-gray-300", "dark:border-gray-700");
+                }
+            }
+
+            // Jika user menjawab salah
+            if (selectedIndex === currentData.correct) {
+                quizScore += 20; // Tiap soal 20 poin
+                quizScoreDisplay.textContent = quizScore;
+            } else {
+                selectedBtn.classList.add("wrong");
+                selectedBtn.classList.remove("border-gray-300", "dark:border-gray-700");
+            }
+
+            // Tampilkan tombol next
+            quizNextBtn.classList.remove("hidden");
+        }
+
+        function nextQuestion() {
+            currentQuiz++;
+            if (currentQuiz < quizData.length) {
+                loadQuizQuestion();
+            } else {
+                showQuizResult();
+            }
+        }
+
+        function showQuizResult() {
+            document.getElementById("quiz-active-area").classList.add("hidden");
+            document.getElementById("quiz-result-area").classList.remove("hidden");
+            
+            const finalScoreEl = document.getElementById("quiz-final-score");
+            const feedbackEl = document.getElementById("quiz-feedback-msg");
+            
+            // Animasi angka count up
+            let start = 0;
+            const duration = 1000;
+            const increment = quizScore / (duration / 16); 
+            
+            const timer = setInterval(() => {
+                start += increment;
+                if (start >= quizScore) {
+                    clearInterval(timer);
+                    finalScoreEl.textContent = quizScore;
+                } else {
+                    finalScoreEl.textContent = Math.floor(start);
+                }
+            }, 16);
+
+            // Beri feedback berdasarkan nilai
+            if(quizScore === 100) {
+                feedbackEl.innerHTML = "Luar biasa! Kamu sangat berbakat jadi Programmer! <i data-lucide='flame' class='inline w-5 h-5 text-orange-500'></i>";
+                finalScoreEl.className = "text-6xl font-black font-cyber text-gradient mb-8 glow-text-green";
+            } else if (quizScore >= 60) {
+                feedbackEl.textContent = "Bagus! Pengetahuan dasarmu tentang IT sudah oke!";
+                finalScoreEl.className = "text-6xl font-black font-cyber text-blue-500 mb-8 glow-text-blue";
+            } else {
+                feedbackEl.textContent = "Tidak apa-apa, kamu bisa belajar semuanya dari nol di PPLG!";
+                finalScoreEl.className = "text-6xl font-black font-cyber text-gray-500 mb-8";
+            }
+            
+            lucide.createIcons();
+        }
+
+        function restartQuiz() {
+            currentQuiz = 0;
+            quizScore = 0;
+            quizScoreDisplay.textContent = "0";
+            
+            document.getElementById("quiz-result-area").classList.add("hidden");
+            document.getElementById("quiz-active-area").classList.remove("hidden");
+            
+            loadQuizQuestion();
+        }
 
     </script>
 </body>
